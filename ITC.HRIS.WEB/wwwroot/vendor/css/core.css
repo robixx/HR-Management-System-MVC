@@ -773,23 +773,46 @@ progress {
 }
 @media (min-width: 992px) {
   .container-lg, .container-md, .container-sm, .container {
-    max-width: 960px;
+    max-width: 970px;
   }
 }
-@media (min-width: 1241px) {
+@media (min-width: 1130px) {
   .container-xl, .container-lg, .container-md, .container-sm, .container {
-    max-width: 1240px;
+    max-width: 1043px;
   }
 }
 @media (min-width: 1400px) {
-  .container-xxl, .container-xl, .container-lg, .container-md, .container-sm, .container {
-    max-width: 1240px;
-  }
+    .container-xxl, .container-xl, .container-lg,
+    .container-md, .container-sm, .container {
+        max-width: 1135px; /* Bootstrap standard */
+    }
 }
+
+@media (min-width: 1500px) {
+    .container-xxl, .container-xl, .container-lg,
+    .container-md, .container-sm, .container {
+        max-width: 1585px; /* reasonable increase */
+    }
+}
+
+/* Large screens */
+@media (min-width: 1400px) {
+    .container {
+        max-width: 1135px;
+    }
+}
+
+/* Extra large / zoom-safe */
 @media (min-width: 1600px) {
-  .container-xxl, .container-xl, .container-lg, .container-md, .container-sm, .container {
-    max-width: 1620px;
-  }
+    .container {
+        max-width: 1400px;
+    }
+}
+
+@media (min-width: 1800px) {
+    .container {
+        max-width: 1585px;
+    }
 }
 :root {
   --bs-breakpoint-xs: 0;
@@ -25622,6 +25645,8 @@ li:not(:first-child) .dropdown-item, .dropdown-menu .dropdown-item:not(:first-ch
 .container-xxl {
   padding-inline: 1rem;
 }
+/* Zoom-safe width */
+
 @media (min-width: 992px) {
   .container,
   .container-fluid,

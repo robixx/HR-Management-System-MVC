@@ -1,8 +1,88 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Login Page";
 }
+<style>
+    .form-control {
+        min-width: 0;
+    }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    .card {
+        transition: all 0.3s ease;
+    }
+
+</style>
+<div class="row justify-content-center align-items-center" style="min-height:88vh;">
+    
+    <div class="col-12 d-flex justify-content-center">
+        
+        <!-- Wrapper to control width -->
+        <div class="w-100" style="max-width:420px;">
+            
+            <!-- Login Card -->
+            <div class="card shadow-lg border-0 rounded-4">
+                
+                <div class="card-body p-3 p-md-4 p-lg-5">
+                    
+                    <!-- Header -->
+                    <div class="text-center mb-4">
+                        <img src="~/ihelp/itcl_logo.png"
+                             alt="logo_log"
+                             class="img-fluid mb-2"
+                             style="max-height:60px;" />
+
+                        <h5 class="fw-bold text-dark mb-1">IT Consultants PLC.</h5>
+                        <p class="text-muted small">HRIS Management System</p>
+                    </div>
+
+                    <!-- Login Form -->
+                    <form>
+                        
+                        <!-- Email -->
+                        <div class="mb-3">
+                            <label class="form-label small text-muted">Email</label>
+                            <div class="input-group">
+                                <span class="input-group-text border-end-0">
+                                    <i class="bi bi-envelope text-muted"></i>
+                                </span>
+                                <input type="email" class="form-control" placeholder="name@example.com" required>
+                            </div>
+                        </div>
+
+                        <!-- Password -->
+                        <div class="mb-3">
+                            <label class="form-label small text-muted">Password</label>
+                            <div class="input-group">
+                                <span class="input-group-text border-end-0">
+                                    <i class="bi bi-lock text-muted"></i>
+                                </span>
+                                <input type="password" class="form-control" placeholder="Enter your password" required>
+                            </div>
+                        </div>
+
+                        <!-- Remember -->
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox">
+                                <label class="form-check-label small text-muted">
+                                    Remember me
+                                </label>
+                            </div>
+                            <a href="#" class="small text-decoration-none text-primary fw-semibold">
+                                Forgot password?
+                            </a>
+                        </div>
+
+                        <!-- Button -->
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg rounded-3 fw-semibold">
+                                Sign In
+                            </button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
 </div>
