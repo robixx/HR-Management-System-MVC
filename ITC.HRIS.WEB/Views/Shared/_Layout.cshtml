@@ -1,32 +1,59 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - IT Consultants PLC.</title>
-    <link rel="icon" type="image/x-icon" href="~/img/favicon/favicon.ico" />
-    <link href="~/vendor/css/core.css" rel="stylesheet" />
-    
-    <link href="~/vendor/css/demo.css" rel="stylesheet" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/ITC.HRIS.WEB.styles.css" asp-append-version="true" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <style>
-            body {
-                background-image: url(/ihelp/login_bg.png);
-                background-position: center;
-                background-size: cover;
-            }
-    </style>
+
+    @Html.Partial("~/Views/Shared/_title_meta.cshtml")
+    @RenderSection("styles", false)
+    @Html.Partial("~/Views/Shared/_head_css.cshtml")
+
 </head>
 
-<body>    
-    <div class="container">
-        @RenderBody()
+<body data-sidebar="dark">
+
+    <!-- Begin page -->
+    <div id="layout-wrapper">
+
+        @Html.Partial("~/Views/Shared/_topbar.cshtml")
+        @Html.Partial("~/Views/Shared/_sidebar.cshtml")
+
+        <!-- ============================================================== -->
+        <!-- Start right Content here -->
+        <!-- ============================================================== -->
+
+        <div class="main-content">
+            <div class="page-content">
+                <div class="container-fluid">
+
+                    @Html.Partial("~/Views/Shared/_page_title.cshtml")
+
+                    @RenderBody()
+
+                </div> <!-- container-fluid -->
+            </div>
+            <!-- End Page-content -->
+
+            @Html.Partial("~/Views/Shared/_footer.cshtml")
+
+        </div>
+        <!-- end main content-->
+
     </div>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+
+    @RenderSection("externalhtml", required: false)
+
+    <!-- END layout-wrapper -->
+
+    @Html.Partial("~/Views/Shared/_right_sidebar.cshtml")
+
+ 
+
+    @Html.Partial("~/Views/Shared/_vendor_scripts.cshtml")
+    @RenderSection("scripts", required: false)
+
+   
+
+
 </body>
+
 </html>

@@ -1,88 +1,111 @@
 ﻿@{
-    ViewData["Title"] = "Login Page";
+    ViewData["Title"] = "Login";
+    Layout = "~/Views/Shared/_BlankLayout.cshtml";
 }
-<style>
-    .form-control {
-        min-width: 0;
-    }
 
-    .card {
-        transition: all 0.3s ease;
-    }
 
-</style>
-<div class="row justify-content-center align-items-center" style="min-height:88vh;">
-    
-    <div class="col-12 d-flex justify-content-center">
-        
-        <!-- Wrapper to control width -->
-        <div class="w-100" style="max-width:420px;">
-            
-            <!-- Login Card -->
-            <div class="card shadow-lg border-0 rounded-4">
-                
-                <div class="card-body p-3 p-md-4 p-lg-5">
-                    
-                    <!-- Header -->
-                    <div class="text-center mb-4">
-                        <img src="~/ihelp/itcl_logo.png"
-                             alt="logo_log"
-                             class="img-fluid mb-2"
-                             style="max-height:60px;" />
-
-                        <h5 class="fw-bold text-dark mb-1">IT Consultants PLC.</h5>
-                        <p class="text-muted small">HRIS Management System</p>
-                    </div>
-
-                    <!-- Login Form -->
-                    <form>
-                        
-                        <!-- Email -->
-                        <div class="mb-3">
-                            <label class="form-label small text-muted">Email</label>
-                            <div class="input-group">
-                                <span class="input-group-text border-end-0">
-                                    <i class="bi bi-envelope text-muted"></i>
-                                </span>
-                                <input type="email" class="form-control" placeholder="name@example.com" required>
-                            </div>
-                        </div>
-
-                        <!-- Password -->
-                        <div class="mb-3">
-                            <label class="form-label small text-muted">Password</label>
-                            <div class="input-group">
-                                <span class="input-group-text border-end-0">
-                                    <i class="bi bi-lock text-muted"></i>
-                                </span>
-                                <input type="password" class="form-control" placeholder="Enter your password" required>
-                            </div>
-                        </div>
-
-                        <!-- Remember -->
-                        <div class="d-flex justify-content-between align-items-center mb-4">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox">
-                                <label class="form-check-label small text-muted">
-                                    Remember me
-                                </label>
-                            </div>
-                            <a href="#" class="small text-decoration-none text-primary fw-semibold">
-                                Forgot password?
+<div class="container vh-100 d-flex justify-content-center align-items-center">
+    <div class="row w-100">
+        <div class="col-md-6 col-lg-4 mx-auto">
+            <div class="card shadow-sm p-4">
+                <div class="text-center">
+                    <div>
+                        <a href="#" class="">
+                            <img src="~/images/cover.png" alt="" height="60" class="auth-logo logo-dark mx-auto">
                             </a>
                         </div>
 
-                        <!-- Button -->
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-primary btn-lg rounded-3 fw-semibold">
-                                Sign In
-                            </button>
-                        </div>
+                        <h4 class="font-size-18 mt-4">Welcome Back !</h4>
+                        <p class="text-muted">Sign in to continue to InfoTrack</p>
+                    </div>
 
-                    </form>
+                    <div class="p-2 mt-2">
+                        <form class="" id="loginForm" method="post" action=@Url.Action("DoLogin", "Default",new {area="Login"})>
+                            <div id="loginError" class="text-danger" style="display:none;"></div>
+                            <div class="mb-3 auth-form-group-custom mb-4">
+                                <i class="ri-user-2-line auti-custom-input-icon"></i>
+                                <label for="username">Username</label>
+                                <input type="text" class="form-control" id="username" placeholder="Enter username">
+                            </div>
+
+                            <div class="mb-3 auth-form-group-custom mb-4">
+                                <i class="ri-lock-2-line auti-custom-input-icon"></i>
+                                <label for="userpassword">Password</label>
+                                <input type="password" class="form-control" id="userpassword" placeholder="Enter password">
+                            </div>
+
+                            <div class="mt-4 text-center">
+                                <button id="login" class="btn btn-primary w-md waves-effect waves-light" type="submit">Log In</button>
+                            </div>
+                            <div id="spinner" class="text-center mt-3" style=" display:none;">
+                                <i class="fa fa-spinner fa-spin"></i> Logging in...
+                            </div>
+
+                        </form>
+
+                   
+                    </div>
+
+                    <hr class="my-4">
+
+                    <div class="text-center">
+                        <p class="mb-1 d-none">Don't have an account? <a href="@Url.Action("Index", "AuthRegister")" class="text-primary fw-bold">Register</a></p>
+                        <p class="text-muted small">
+                            © <script>document.write(new Date().getFullYear())</script> ITC PLC. Crafted with <i class="bi bi-heart-fill text-danger"></i> by ITC Development Team.
+                        </p>
+                    </div>
                 </div>
             </div>
-
         </div>
     </div>
-</div>
+
+    @section scr {
+        <script src="~/libs/jquery/jquery.min.js"></script>
+        <script src="~/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="~/libs/metismenu/metisMenu.min.js"></script>
+        <script src="~/libs/simplebar/simplebar.min.js"></script>
+        <script src="~/libs/node-waves/waves.min.js"></script>
+        <script src="~/js/app.js"></script>
+    }
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#loginForm").submit(function (event) {
+
+                event.preventDefault();
+                let LoginRequest = {
+                    UserName: $("#username").val(),
+                    Password: $("#userpassword").val(),
+                };
+                $("#spinner").show();
+                $("#login").prop("disabled", true);
+
+                $.ajax({
+                    url: "@Url.Action("DoLogin", "Default", new { area = "Login" })",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify(LoginRequest),
+                    success: function (response) {
+                     var redirectUrl = response.redirectUrl; // Get the redirect URL from response
+                    if (response.status)
+                    {
+            // Redirect to the returned URL
+                          window.location.href = redirectUrl;
+                        } else {
+                             $("#loginError").text(response.message).show(); // Show error message
+                        }
+                    }
+                    ,
+                    error: function (xhr) {
+                        alert("Login failed: " + xhr.responseText);
+                    },
+                    complete: function () {
+                        // Always hide spinner & enable button after response
+                        $("#spinner").hide();
+                        $("#login").prop("disabled", false);
+                    }
+                });
+
+            });
+        });
+    </script>
