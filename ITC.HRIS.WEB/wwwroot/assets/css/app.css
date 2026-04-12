@@ -336,6 +336,7 @@ body[data-topbar=colored] .app-search input.form-control::-webkit-input-placehol
 @media (max-width: 992px) {
   .footer {
     right: 0;
+    
   }
 }
 .vertical-collpsed .footer {

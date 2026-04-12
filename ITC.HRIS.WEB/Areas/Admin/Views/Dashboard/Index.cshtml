@@ -1,6 +1,9 @@
 ﻿
 @{
-    ViewData["Title"] = "Dashboard";
+    
+    ViewBag.Title = "Dashboard";
+    ViewBag.pTitle = "Dashboard";
+    ViewBag.pageTitle = "HRIS";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -24,7 +27,7 @@
 <div class="row">
     <div class="col-xl-12">
         <div class="d-sm-flex align-items-center justify-content-between float-end mb-1 gap-2">
-           @*  <a href="@Url.Action("TokenCreate", "TokenGenerate", new { area = "TokenGenerate" })" class="btn btn-primary btn-sm">Create Token</a> *@
+          @* <a href="@Url.Action("TokenCreate", "TokenGenerate", new { area = "TokenGenerate" })" class="btn btn-primary btn-sm">Create Token</a>  *@
             <select class="form-control form-control-sm ms-2" id="dash_filter" onchange="FilterData()" style="width: auto;">
                 <option value="1" selected>Today</option>
                 <option value="2">Month</option>
@@ -135,24 +138,8 @@
 @section scripts{
     <!-- apexcharts -->
  
-@* 
-    <!-- jquery.vectormap map -->
-    <script src="~/assets/libs/admin-resources/jquery.vectormap/jquery-jvectormap-1.2.2.min.js"></script>
-    <script src="~/assets/libs/admin-resources/jquery.vectormap/maps/jquery-jvectormap-us-merc-en.js"></script>
 
-    <!-- Required datatable js -->
-    <script src="~/assets/libs/datatables.net/js/jquery.dataTables.min.js"></script>
-    <script src="~/assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
-
-    <!-- Responsive examples -->
-    <script src="~/assets/libs/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
-    <script src="~/assets/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>   
-
-    <!-- App js -->
-  
-    <script src="~/assets/js/app.js"></script> *@
-
-    <script src="@Url.Content("~/assets/libs/admin-resources/jquery.vectormap/jquery-jvectormap-1.2.2.min.js")"></script>
+<script src="@Url.Content("~/assets/libs/admin-resources/jquery.vectormap/jquery-jvectormap-1.2.2.min.js")"></script>
 <script src="@Url.Content("~/assets/libs/admin-resources/jquery.vectormap/maps/jquery-jvectormap-us-merc-en.js")"></script>
 
 <script src="@Url.Content("~/assets/libs/datatables.net/js/jquery.dataTables.min.js")"></script>
