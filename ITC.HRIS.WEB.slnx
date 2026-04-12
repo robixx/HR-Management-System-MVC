@@ -1,3 +1,6 @@
 <Solution>
+  <Project Path="Itc.Hris.Application/Itc.Hris.Application.csproj" Id="f5a1d54a-162a-429b-9402-5edcc52bd39e" />
+  <Project Path="Itc.Hris.Infrastructure/Itc.Hris.Infrastructure.csproj" Id="b3c419fd-c41b-4f88-b9a4-90be9bbf1871" />
+  <Project Path="Itc.Hris.Model/Itc.Hris.Model.csproj" Id="183d85b4-64df-42c4-aa03-48fe5817a1a9" />
   <Project Path="ITC.HRIS.WEB/ITC.HRIS.WEB.csproj" />
 </Solution>

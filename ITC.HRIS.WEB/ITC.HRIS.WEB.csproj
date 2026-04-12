@@ -29,4 +29,9 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.23" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Itc.Hris.Application\Itc.Hris.Application.csproj" />
+    <ProjectReference Include="..\Itc.Hris.Infrastructure\Itc.Hris.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>
