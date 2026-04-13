@@ -1,4 +1,5 @@
-using Itc.Hris.Model.Entities;
+
+using Itc.Hris.Application.ModelView;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -6,10 +7,10 @@ namespace Itc.Hris.Application.Interfaces
 {
     public interface IRoleService
     {
-        Task<IEnumerable<Role>> GetAllAsync();
-        Task<Role?> GetByIdAsync(int id);
-        Task<Role> CreateAsync(Role role);
-        Task<Role?> UpdateAsync(Role role);
-        Task<bool> DeleteAsync(int id);
+        Task<(string Message, bool Status,IEnumerable<RoleDto>data_list)> GetAllAsync();
+        Task<(string Message, bool Status, RoleDto? data)> GetByIdAsync(int id);
+        Task<(string Message, bool Status)> CreateAsync(RoleDto role);
+        Task<(string Message, bool Status)> UpdateAsync(RoleDto role);
+        Task<(string Message, bool Status)> DeleteAsync(int id);
     }
 }

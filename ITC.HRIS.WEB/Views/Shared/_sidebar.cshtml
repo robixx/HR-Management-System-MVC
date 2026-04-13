@@ -64,39 +64,16 @@
                         <span>Kanban Board</span>
                     </a>
                 </li>
-
                 <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
-                        <i class="ri-layout-3-line"></i>
-                        <span>Layouts</span>
+                        <i class="ri-store-2-line"></i>
+                        <span>Settings</span>
                     </a>
-                    <ul class="sub-menu" aria-expanded="true">
-                        <li>
-                            <a href="javascript: void(0);" class="has-arrow">Vertical</a>
-                            <ul class="sub-menu" aria-expanded="true">
-                                <li><a href=@Url.Action("Index", "LayoutsLightSidebar")>Light Sidebar</a></li>
-                                <li><a href=@Url.Action("Index", "LayoutsCompactSidebar")>Compact Sidebar</a></li>
-                                <li><a href=@Url.Action("Index", "LayoutsIconSidebar")>Icon Sidebar</a></li>
-                                <li><a href=@Url.Action("Index", "LayoutsBoxed")>Boxed Layout</a></li>
-                                <li><a href=@Url.Action("Index", "LayoutsPreloader")>Preloader</a></li>
-                                <li><a href=@Url.Action("Index", "LayoutsColoredSidebar")>Colored Sidebar</a></li>
-                            </ul>
-                        </li>
-
-                        <li>
-                            <a href="javascript: void(0);" class="has-arrow">Horizontal</a>
-                            <ul class="sub-menu" aria-expanded="true">
-                                <li><a href=@Url.Action("Index", "LayoutsHorizontal")>Horizontal</a></li>
-                                <li><a href=@Url.Action("Index", "LayoutsHoriTopbarLight")>Topbar light</a></li>
-                                <li><a href=@Url.Action("Index", "LayoutsHoriBoxedWidth")>Boxed width</a></li>
-                                <li><a href=@Url.Action("Index", "LayoutsHoriPreloader")>Preloader</a></li>
-                                <li><a href=@Url.Action("Index", "LayoutsHoriColoredHeader")>Colored Header</a></li>
-                            </ul>
-                        </li>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li><a href=@Url.Action("Index", "UserRole", new{Area="Admin"})>Role List</a></li>
+                        
                     </ul>
-                </li>
-
-               
+                </li>               
 
             </ul>
         </div>

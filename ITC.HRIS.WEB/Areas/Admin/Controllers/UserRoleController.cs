@@ -1,14 +1,14 @@
 using Itc.Hris.Application.Interfaces;
-using Itc.Hris.Model.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Itc.Hris.Application.ModelView;
 
 namespace ITC.HRIS.WEB.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    public class RoleController : Controller
+    public class UserRoleController : Controller
     {
         private readonly IRoleService _roleService;
-        public RoleController(IRoleService roleService)
+        public UserRoleController(IRoleService roleService)
         {
             _roleService = roleService;
         }
@@ -21,27 +21,27 @@ namespace ITC.HRIS.WEB.Areas.Admin.Controllers
         public async Task<IActionResult> List()
         {
             var roles = await _roleService.GetAllAsync();
-            return PartialView("_RoleList", roles);
+            return View(roles);
         }
 
         public IActionResult Create()
         {
-            return PartialView("_RoleCreateEdit", new Role());
+            return View();
         }
 
         public async Task<IActionResult> Edit(int id)
         {
             var role = await _roleService.GetByIdAsync(id);
-            if (role == null) return NotFound();
-            return PartialView("_RoleCreateEdit", role);
+            if (role.Status == false) return NotFound();
+            return View(role.data);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Save(Role role)
+        public async Task<IActionResult> Save(RoleDto role)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            if (role.Id == 0)
+            if (role.RoleId == 0)
             {
                 await _roleService.CreateAsync(role);
                 return Json(new { status = true, message = "Created" });
@@ -49,7 +49,7 @@ namespace ITC.HRIS.WEB.Areas.Admin.Controllers
             else
             {
                 var updated = await _roleService.UpdateAsync(role);
-                if (updated == null) return Json(new { status = false, message = "Not found" });
+                if (updated.Status == false) return Json(new { status = false, message = "Not found" });
                 return Json(new { status = true, message = "Updated" });
             }
         }
@@ -58,7 +58,7 @@ namespace ITC.HRIS.WEB.Areas.Admin.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var result = await _roleService.DeleteAsync(id);
-            return Json(new { status = result });
+            return Json(new { status = result.Status, message = result.Message });
         }
     }
 }

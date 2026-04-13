@@ -1,0 +1,40 @@
+﻿@{
+    
+    ViewBag.Title = "UserRole";
+    ViewBag.pTitle = "UserRole";
+    ViewBag.pageTitle = "HRIS";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section styles{
+    <link href="@Url.Content("~/assets/libs/admin-resources/jquery.vectormap/jquery-jvectormap-1.2.2.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/assets/libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css")" rel="stylesheet" />
+
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">           
+            <div class="card-body">
+                <a class="btn btn-primary btn-sm" id="btnrole">New Role</a>
+            </div>
+        </div>
+    </div>
+   
+</div>
+
+
+
+
+@section scripts {
+    <!-- apexcharts -->
+
+    <script src="@Url.Content("~/assets/libs/admin-resources/jquery.vectormap/jquery-jvectormap-1.2.2.min.js")"></script>
+    <script src="@Url.Content("~/assets/libs/admin-resources/jquery.vectormap/maps/jquery-jvectormap-us-merc-en.js")"></script>
+    <script src="@Url.Content("~/assets/libs/datatables.net/js/jquery.dataTables.min.js")"></script>
+    <script src="@Url.Content("~/assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js")"></script>
+    <script src="@Url.Content("~/assets/libs/datatables.net-responsive/js/dataTables.responsive.min.js")"></script>
+    <script src="@Url.Content("~/assets/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js")"></script>
+    <script src="@Url.Content("~/assets/js/app.js")"></script>
+
+}

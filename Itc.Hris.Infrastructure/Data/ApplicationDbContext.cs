@@ -9,17 +9,17 @@ namespace Itc.Hris.Infrastructure.Data
         {
         }
 
-        public DbSet<Role> Roles { get; set; }
+        public DbSet<AppRole> AppRole { get; set; }
         public DbSet<Permission> Permissions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Role>(entity =>
+            modelBuilder.Entity<AppRole>(entity =>
             {
-                entity.HasKey(e => e.Id);
-                entity.Property(e => e.Name).IsRequired().HasMaxLength(100);
+                entity.HasKey(e => e.RoleId);
+                entity.Property(e => e.RoleName).IsRequired().HasMaxLength(100);
             });
 
             modelBuilder.Entity<Permission>(entity =>

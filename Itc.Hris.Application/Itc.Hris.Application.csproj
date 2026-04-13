@@ -10,8 +10,4 @@
     <ProjectReference Include="..\Itc.Hris.Model\Itc.Hris.Model.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Services\" />
-  </ItemGroup>
-
 </Project>

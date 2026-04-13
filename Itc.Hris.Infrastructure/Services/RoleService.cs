@@ -1,6 +1,7 @@
 using Itc.Hris.Application.Interfaces;
-using Itc.Hris.Model.Entities;
+using Itc.Hris.Application.ModelView;
 using Itc.Hris.Infrastructure.Data;
+using Itc.Hris.Model.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Itc.Hris.Infrastructure.Services
@@ -13,40 +14,111 @@ namespace Itc.Hris.Infrastructure.Services
             _db = db;
         }
 
-        public async Task<Role> CreateAsync(Role role)
+        public async Task<(string Message, bool Status)> CreateAsync(RoleDto role)
         {
-            _db.Roles.Add(role);
+            try
+            {
+                if (role == null)
+                { 
+                   return ("Data Not Valid", false);
+                }
+                var entity = new AppRole
+                {
+                    RoleName = role.RoleName,
+                    Description = role.Description,
+                    IsActive = role.IsActive ?? 1
+                };
+                await _db.AppRole.AddAsync(entity);
+                await _db.SaveChangesAsync();
+                return ($"{role.RoleName} created successfully", true); 
+            }
+            catch (Exception ex)
+            {
+                return ($"Service-->:{nameof(RoleService)} and Method-->{nameof(CreateAsync)} Error:{ex.Message}", false);
+            }
+           
+        }
+
+        public async Task<(string Message, bool Status)> DeleteAsync(int id)
+        {
+            try
+            {
+                var entity = await _db.AppRole.FindAsync(id);
+            if (entity == null) return ("Role not found", false);
+            _db.AppRole.Remove(entity);
             await _db.SaveChangesAsync();
-            return role;
+            return ($"{entity.RoleName} deleted successfully", true);
+           }
+            catch (Exception ex)    
+            {
+                return ($"Service-->:{nameof(RoleService)} and ActionMethod-->{nameof(DeleteAsync)} Error:{ex.Message}", false);
+            }
         }
 
-        public async Task<bool> DeleteAsync(int id)
+        public async Task<(string Message, bool Status,IEnumerable<RoleDto> data_list)> GetAllAsync()
         {
-            var entity = await _db.Roles.FindAsync(id);
-            if (entity == null) return false;
-            _db.Roles.Remove(entity);
-            await _db.SaveChangesAsync();
-            return true;
+            try
+            {
+                var list = await _db.AppRole.AsNoTracking()
+               .Select(r => new RoleDto
+               {
+                   RoleId = r.RoleId,
+                   RoleName = r.RoleName,
+                   Description = r.Description,
+                   IsActive = r.IsActive
+               })
+               .ToListAsync();
+
+                return ($"Roles retrieved successfully", true, list);
+
+            }
+            catch (Exception ex)
+            {
+                return ($"Service-->:{nameof(RoleService)} and ActionMethod-->{nameof(GetAllAsync)} Error:{ex.Message}", false, new List<RoleDto>());
+            }
+              
         }
 
-        public async Task<IEnumerable<Role>> GetAllAsync()
+        public async Task<(string Message, bool Status, RoleDto? data)> GetByIdAsync(int id)
         {
-            return await _db.Roles.AsNoTracking().ToListAsync();
+            try
+            {
+                var entity = await _db.AppRole.FindAsync(id);
+                if (entity == null) return ("Role not found", false, null);
+                var roleDto = new RoleDto
+                {
+                    RoleId = entity.RoleId,
+                    RoleName = entity.RoleName,
+                    Description = entity.Description,
+                    IsActive = entity.IsActive
+                };
+                return ("RoleData retrieved successfully", true, roleDto);
+            }
+            catch (Exception ex)
+            {
+                return ($"Service-->:{nameof(RoleService)} and ActionMethod-->{nameof(GetByIdAsync)} Error:{ex.Message}", false, new RoleDto());
+            }
+            
         }
 
-        public async Task<Role?> GetByIdAsync(int id)
+        public async Task<(string Message, bool Status)> UpdateAsync(RoleDto role)
         {
-            return await _db.Roles.FindAsync(id);
-        }
 
-        public async Task<Role?> UpdateAsync(Role role)
-        {
-            var existing = await _db.Roles.FindAsync(role.Id);
-            if (existing == null) return null;
-            existing.Name = role.Name;
-            existing.Description = role.Description;
-            await _db.SaveChangesAsync();
-            return existing;
+            try
+            {
+                var existing = await _db.AppRole.FindAsync(role.RoleId);
+                if (existing == null) return ("Role not found", false);
+                existing.RoleName = role.RoleName;
+                existing.Description = role.Description;
+                existing.IsActive = role.IsActive ?? existing.IsActive;
+                await _db.SaveChangesAsync();
+                return ("Update Successfully", true);
+            }
+            catch (Exception ex)
+            {
+                return ($"Service-->:{nameof(RoleService)} and ActionMethod-->{nameof(UpdateAsync)} Error:{ex.Message}", false);
+            }
+            
         }
     }
 }
