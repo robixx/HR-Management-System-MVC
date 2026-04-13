@@ -1,7 +1,19 @@
+using Itc.Hris.Infrastructure.Data;
+using Itc.Hris.Application.Interfaces;
+using Itc.Hris.Infrastructure.Services;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+// Add DbContext (configure your connection string in appsettings.json)
+var conn = builder.Configuration.GetConnectionString("DefaultConnection") ?? "Server=(localdb)\\mssqllocaldb;Database=HRIS;Trusted_Connection=True;";
+builder.Services.AddDbContext<ApplicationDbContext>(opt => opt.UseSqlServer(conn));
+
+// Register application services (implemented in Infrastructure)
+builder.Services.AddScoped<IRoleService, RoleService>();
 
 var app = builder.Build();
 

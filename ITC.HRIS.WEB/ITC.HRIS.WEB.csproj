@@ -32,6 +32,12 @@
   <ItemGroup>
     <ProjectReference Include="..\Itc.Hris.Application\Itc.Hris.Application.csproj" />
     <ProjectReference Include="..\Itc.Hris.Infrastructure\Itc.Hris.Infrastructure.csproj" />
+    <ProjectReference Include="..\Itc.Hris.Model\Itc.Hris.Model.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.23" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.23" />
   </ItemGroup>
 
 </Project>
