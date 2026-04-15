@@ -13,9 +13,10 @@ namespace ITC.HRIS.WEB.Areas.Admin.Controllers
             _roleService = roleService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var roles = await _roleService.GetAllAsync();
+            return View(roles.data_list);
         }
 
         public async Task<IActionResult> List()
