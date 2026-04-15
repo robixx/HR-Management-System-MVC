@@ -37,18 +37,18 @@ namespace ITC.HRIS.WEB.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Save(RoleDto role)
+        public async Task<IActionResult> CreateRoleSave([FromBody] RoleDto roleData)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            if (role.RoleId == 0)
+            if (roleData.RoleId == 0)
             {
-                await _roleService.CreateAsync(role);
-                return Json(new { status = true, message = "Created" });
+                var result=await _roleService.CreateAsync(roleData);
+                return Json(new { status = result.Status, message = result.Message });
             }
             else
             {
-                var updated = await _roleService.UpdateAsync(role);
+                var updated = await _roleService.UpdateAsync(roleData);
                 if (updated.Status == false) return Json(new { status = false, message = "Not found" });
                 return Json(new { status = true, message = "Updated" });
             }

@@ -22,15 +22,26 @@ namespace Itc.Hris.Infrastructure.Services
                 { 
                    return ("Data Not Valid", false);
                 }
+                var roleName = role?.RoleName?.Trim().ToLower();
+                var isExists = await _db.AppRole
+                    .AnyAsync(x =>
+                        x.RoleName != null &&
+                        x.RoleName.Trim().ToLower() == roleName
+                    );
+
+                if (isExists)
+                {
+                    return ("Role name already exists", false);
+                }
                 var entity = new AppRole
                 {
-                    RoleName = role.RoleName,
-                    Description = role.Description,
-                    IsActive = role.IsActive ?? 1
+                    RoleName = role?.RoleName??"",
+                    Description = role?.Description,
+                    IsActive = role?.IsActive ?? 1
                 };
                 await _db.AppRole.AddAsync(entity);
                 await _db.SaveChangesAsync();
-                return ($"{role.RoleName} created successfully", true); 
+                return ($"{role?.RoleName} created successfully", true); 
             }
             catch (Exception ex)
             {

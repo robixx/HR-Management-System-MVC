@@ -9,7 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 // Add DbContext (configure your connection string in appsettings.json)
-var conn = builder.Configuration.GetConnectionString("DefaultConnection") ?? "Server=(localdb)\\mssqllocaldb;Database=HRIS;Trusted_Connection=True;";
+var conn = builder.Configuration.GetConnectionString("DefaultConnection") ?? "Server=Robi-Laptop;Database=ihelp_db_live_TEST;Trusted_Connection=True;";
 builder.Services.AddDbContext<ApplicationDbContext>(opt => opt.UseSqlServer(conn));
 
 // Register application services (implemented in Infrastructure)
