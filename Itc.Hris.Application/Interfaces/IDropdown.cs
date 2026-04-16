@@ -10,5 +10,6 @@ namespace Itc.Hris.Application.Interfaces
     public interface IDropdown
     {
         Task<List<DropDownDto>> getUserAsync();
+        Task<List<DropDownDto>> getRoleAsync();
     }
 }

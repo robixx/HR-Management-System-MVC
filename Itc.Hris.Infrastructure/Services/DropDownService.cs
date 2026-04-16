@@ -18,6 +18,26 @@ namespace Itc.Hris.Infrastructure.Services
             _dbcontext = dbcontext;
         }
 
+        public async Task<List<DropDownDto>> getRoleAsync()
+        {
+            try
+            {
+                var userlist = await _dbcontext.AppRole
+                    .Select(x => new DropDownDto
+                    {
+                        Id = x.RoleId,
+                        Name = x.RoleName
+                    }).ToListAsync();
+
+                return userlist;
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
         public async Task<List<DropDownDto>> getUserAsync()
         {
             try
