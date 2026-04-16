@@ -66,13 +66,22 @@
                                                     Manage
                                                 </button>
                                             </td>
+                                            <td>
+                                            <span class="badge @(role.IsActive == 1 ? "bg-success" : "bg-danger")">
+                                                @(role.IsActive == 1 ? "Active" : "Inactive")
+                                            </span>
+                                            </td>
                                             <td class="text-end action-btns">
-                                                <a href="#" class="text-primary me-2">
-                                                    <i class="fas fa-pencil-alt"></i>
-                                                </a>
-                                                <a href="#" class="text-danger">
-                                                    <i class="fas fa-trash"></i>
-                                                </a>
+                                            <a href="javascript:void(0);"
+                                                   class="text-primary me-2"
+                                                   onclick="editRole(@role.RoleId,'@role.RoleName','@role.Description',@role.IsActive)">
+                                                <i class="fas fa-pencil-alt"></i>
+                                            </a>
+                                            <a href="javascript:void(0);"
+                                                   class="text-danger"
+                                                   onclick="deleteRole(@role.RoleId)">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
                                             </td>
                                         </tr>
                                     }
@@ -88,10 +97,8 @@
                     <div class="row">
 
                         <div class="col-md-6">
-                            <label>User</label>
-                            <select class="form-select">
-                                <option>Select User</option>
-                            </select>
+                            <label class="form-label">User</label>
+                            @Html.DropDownList("employeeId", (SelectList)ViewBag.userlist, new { @class = "select2 col-md-12" })
                         </div>
 
                         <div class="col-md-6">
@@ -158,6 +165,11 @@
 }
 <script src="~/assets/libs/jquery/jquery.min.js"></script>
 <script>
+
+     $(".select2").select2({
+         placeholder: "Select",
+         allowClear: true
+     });
 
     var modalMode="";
 
@@ -288,7 +300,7 @@
                     if(res.status){
                          toastr["success"]("", res.message); 
                          setTimeout(function () {
-                                location.reload();
+                                window.location.reload();
                          }, 1500);
                     }else{
                          toastr["warning"]("", res.message) ;  
@@ -313,5 +325,80 @@
         $(this).removeClass('is-invalid');
         $('#validationSummary').addClass('d-none');
     });
+
+    // for edit
+
+    function editRole(roleid, rolename, description, isactive){
+        modalMode = "role";
+        $('#permissionModal .modal-body').html('');
+        $('#modaltitle').text("Role Edit");
+        $('#btnaction').text("Update Role");  
+        
+        var inHTML = `
+                    <div class="row">
+                        <input type="hidden" id="modalMode">
+                        <input type="hidden" id="roleId">
+                        <div class="col-12 mb-3">
+                            <label class="form-label">Role Name</label>
+                            <input type="text" id="roleName" class="form-control">
+                            <div class="invalid-feedback">Role Name is required</div>
+                        </div>
+
+                        <div class="col-12 mb-3">
+                            <label class="form-label">Description</label>
+                            <input type="text" id="roleDesc" class="form-control">
+                        </div>
+
+                        <div class="col-12 mb-3">
+                            <label class="form-label d-block">Status</label>
+
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="isActive" checked>
+                                <label class="form-check-label">Active</label>
+                            </div>
+                        </div>
+                       <div id="validationSummary" class="alert alert-danger d-none py-2"></div>
+
+             </div>
+        `;
+
+        $('#permissionModal .modal-body').html(inHTML);
+       
+        $('#modalMode').val(modalMode);
+        $('#roleId').val(roleid);
+        $('#roleName').val(rolename);
+        $('#roleDesc').val(description);
+        $('#isActive').prop('checked', isactive);
+        
+        $('#permissionModal').modal('show');
+    }
+
+
+    function deleteRole(roleId){
+        debugger;
+        $.ajax({
+            url: '/Admin/UserRole/RoleDelete',
+            type: 'POST',            
+            data: {id: roleId},
+            success: function (res) {
+                 if(res.status){
+                     toastr["success"]("", res.message); 
+                     setTimeout(function () {
+                        window.location.reload();
+                     }, 1500);
+
+                 }else{
+                    toastr["warning"]("", res.message) ;  
+                 }
+                                   
+                    $('#permissionModal').modal('hide');
+            },
+            error: function () {
+                    
+              toastr["warning"]("", "Error saving role")  
+                    
+            }
+        });
+    }
 
 </script>

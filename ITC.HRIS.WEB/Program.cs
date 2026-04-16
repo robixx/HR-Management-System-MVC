@@ -14,6 +14,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(opt => opt.UseSqlServer(conn
 
 // Register application services (implemented in Infrastructure)
 builder.Services.AddScoped<IRoleService, RoleService>();
+builder.Services.AddScoped<IDropdown, DropDownService>();
 
 var app = builder.Build();
 

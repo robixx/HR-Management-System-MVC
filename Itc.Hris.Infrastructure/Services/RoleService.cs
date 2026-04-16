@@ -19,35 +19,62 @@ namespace Itc.Hris.Infrastructure.Services
             try
             {
                 if (role == null)
-                { 
-                   return ("Data Not Valid", false);
+                {
+                    return ("Data Not Valid", false);
                 }
-                var roleName = role?.RoleName?.Trim().ToLower();
+
+                var roleName = role?.RoleName?.Trim().ToLower();               
                 var isExists = await _db.AppRole
                     .AnyAsync(x =>
                         x.RoleName != null &&
-                        x.RoleName.Trim().ToLower() == roleName
+                        x.RoleName.Trim().ToLower() == roleName &&
+                        x.RoleId != role.RoleId 
                     );
 
                 if (isExists)
                 {
                     return ("Role name already exists", false);
                 }
+
+             
+                if (role.RoleId > 0)
+                {
+                    var existing = await _db.AppRole
+                        .FirstOrDefaultAsync(x => x.RoleId == role.RoleId);
+
+                    if (existing == null)
+                    {
+                        return ("Role not found", false);
+                    }
+
+                    existing.RoleName = role.RoleName ?? "";
+                    existing.Description = role.Description;
+                    existing.IsActive = role.IsActive ?? 1;
+
+                    _db.AppRole.Update(existing);
+                    await _db.SaveChangesAsync();
+
+                    return ($"{role.RoleName} updated successfully", true);
+                }
+
+             
                 var entity = new AppRole
                 {
-                    RoleName = role?.RoleName??"",
+                    RoleName = role?.RoleName ?? "",
                     Description = role?.Description,
                     IsActive = role?.IsActive ?? 1
                 };
+
                 await _db.AppRole.AddAsync(entity);
                 await _db.SaveChangesAsync();
-                return ($"{role?.RoleName} created successfully", true); 
+
+                return ($"{role?.RoleName} created successfully", true);
             }
             catch (Exception ex)
             {
-                return ($"Service-->:{nameof(RoleService)} and Method-->{nameof(CreateAsync)} Error:{ex.Message}", false);
+                return ($"Service-->{nameof(RoleService)} Method-->{nameof(CreateAsync)} Error:{ex.Message}", false);
             }
-           
+
         }
 
         public async Task<(string Message, bool Status)> DeleteAsync(int id)

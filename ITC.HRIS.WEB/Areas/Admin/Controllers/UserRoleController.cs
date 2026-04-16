@@ -1,6 +1,7 @@
 using Itc.Hris.Application.Interfaces;
-using Microsoft.AspNetCore.Mvc;
 using Itc.Hris.Application.ModelView;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace ITC.HRIS.WEB.Areas.Admin.Controllers
 {
@@ -8,14 +9,18 @@ namespace ITC.HRIS.WEB.Areas.Admin.Controllers
     public class UserRoleController : Controller
     {
         private readonly IRoleService _roleService;
-        public UserRoleController(IRoleService roleService)
+        private readonly IDropdown _dropdown;
+        public UserRoleController(IRoleService roleService, IDropdown dropdown)
         {
             _roleService = roleService;
+            _dropdown = dropdown;
         }
 
         public async Task<IActionResult> Index()
         {
             var roles = await _roleService.GetAllAsync();
+            ViewBag.userlist = new SelectList(await _dropdown.getUserAsync(), "Id", "Name");
+
             return View(roles.data_list);
         }
 
@@ -42,21 +47,14 @@ namespace ITC.HRIS.WEB.Areas.Admin.Controllers
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            if (roleData.RoleId == 0)
-            {
+           
                 var result=await _roleService.CreateAsync(roleData);
                 return Json(new { status = result.Status, message = result.Message });
-            }
-            else
-            {
-                var updated = await _roleService.UpdateAsync(roleData);
-                if (updated.Status == false) return Json(new { status = false, message = "Not found" });
-                return Json(new { status = true, message = "Updated" });
-            }
+            
         }
 
         [HttpPost]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> RoleDelete(int id)
         {
             var result = await _roleService.DeleteAsync(id);
             return Json(new { status = result.Status, message = result.Message });
