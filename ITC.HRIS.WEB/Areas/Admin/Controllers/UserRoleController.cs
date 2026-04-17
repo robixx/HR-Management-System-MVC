@@ -20,6 +20,7 @@ namespace ITC.HRIS.WEB.Areas.Admin.Controllers
         {
             var roles = await _roleService.GetAllAsync();
             ViewBag.userlist = new SelectList(await _dropdown.getUserAsync(), "Id", "Name");
+            ViewBag.rolelist= new SelectList(await _dropdown.getRoleAsync(), "Id", "Name");
 
             return View(roles.data_list);
         }

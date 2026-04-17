@@ -100,18 +100,16 @@
 
                         <div class="col-md-6">
                             <label class="form-label">User</label>
-                            @Html.DropDownList("employeeId", (SelectList)ViewBag.userlist, new { @class = "form-control select2 col-md-12" })
+                            @Html.DropDownList("employeeId", (SelectList)ViewBag.userlist,"Select Employee", new { @class = "form-control select2 col-md-12" })
                         </div>
 
                         <div class="col-md-6">
-                            <label>Role</label>
-                            <select class="form-select">
-                                <option>Select Role</option>
-                            </select>
+                            <label class="form-label">Role</label>
+                            @Html.DropDownList("roleId", (SelectList)ViewBag.rolelist, "Select Role", new { @class = "form-control select2 col-md-12" })
                         </div>
 
                         <div class="col-12 mt-3 text-end">
-                            <button class="btn btn-primary">Assign Role</button>
+                            <button class="btn btn-primary btn-sm">Assign Role</button>
                         </div>
 
                     </div>
