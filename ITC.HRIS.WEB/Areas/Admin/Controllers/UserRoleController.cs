@@ -20,15 +20,14 @@ namespace ITC.HRIS.WEB.Areas.Admin.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var roles = await _roleService.GetAllAsync();
-            ViewBag.userlist = new SelectList(await _dropdown.getUserAsync(), "Id", "Name");
+            var roles = await _roleService.GetAllAsync();           
             ViewBag.rolelist= new SelectList(await _dropdown.getRoleAsync(), "Id", "Name");
             var empinfo= await _userInformation.GetEmployeesInformationAsync();
 
             var result = new PermissionShowDto
             {
                 RoleDtos = roles.data_list ?? new List<RoleDto>(),
-                EmployeeDetailsDtos = empinfo.user_list ?? new List<EmployeeDetailsDto>()
+                EmployeeDetailsDtos = empinfo.user_list ?? new List<UserWiseRoleDto>()
             };
 
             return View(result);
@@ -69,5 +68,14 @@ namespace ITC.HRIS.WEB.Areas.Admin.Controllers
             var result = await _roleService.DeleteAsync(id);
             return Json(new { status = result.Status, message = result.Message });
         }
+
+        [HttpPost]
+        public async Task<IActionResult> AssignRole(int EmployeeId, int RoleId)
+        {
+            
+            var result = await _userInformation.AssignRoleAsync(EmployeeId, RoleId);
+            return Json(new { status = result.Status, message = result.Message });
+        }
+         
     }
 }

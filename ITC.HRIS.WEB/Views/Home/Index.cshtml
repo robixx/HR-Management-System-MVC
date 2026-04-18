@@ -84,14 +84,12 @@
 </div>
 
     @section scr {
-        <script src="~/libs/jquery/jquery.min.js"></script>
-        <script src="~/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
-        <script src="~/libs/metismenu/metisMenu.min.js"></script>
-        <script src="~/libs/simplebar/simplebar.min.js"></script>
-        <script src="~/libs/node-waves/waves.min.js"></script>
-        <script src="~/js/app.js"></script>
+        
+    <script src="@Url.Content("~/assets/libs/admin-resources/jquery.vectormap/jquery-jvectormap-1.2.2.min.js")"></script>
+    <script src="@Url.Content("~/assets/libs/admin-resources/jquery.vectormap/maps/jquery-jvectormap-us-merc-en.js")"></script>
+    <script src="@Url.Content("~/assets/js/app.js")"></script>
     }
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/assets/libs/jquery/jquery.min.js"></script>
     <script>
         $(document).ready(function () {
             $("#loginForm").submit(function (event) {

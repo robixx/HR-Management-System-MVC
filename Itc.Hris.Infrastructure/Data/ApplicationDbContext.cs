@@ -13,6 +13,7 @@ namespace Itc.Hris.Infrastructure.Data
         public DbSet<Permission> Permissions { get; set; }
         public DbSet<VwEmployeeDetails> VwEmployeeDetails { get; set; }
         public DbSet<VwEmployeeName> VwEmployeeName { get; set; }
+        public DbSet<AppRolePermission> AppRolePermission { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -38,6 +39,20 @@ namespace Itc.Hris.Infrastructure.Data
             {
                 entity.HasNoKey();
                 entity.ToView("vw_employee_name");
+            });
+            modelBuilder.Entity<AppRolePermission>(entity =>
+            {
+                entity.ToTable("app_RolePermission");
+
+                entity.HasKey(e => e.Id);
+
+                entity.HasIndex(e => e.EmployeeId)
+                      .IsUnique()
+                      .HasDatabaseName("UQ_Employee");
+
+                entity.Property(e => e.RoleId).HasColumnName("RoleId");
+                entity.Property(e => e.EmployeeId).HasColumnName("EmployeeId");
+                entity.Property(e => e.IsActive).HasColumnName("IsActive");
             });
         }
     }

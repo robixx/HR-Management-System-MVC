@@ -9,6 +9,6 @@ namespace Itc.Hris.Application.ModelView
     public class PermissionShowDto
     {
         public List<RoleDto> RoleDtos { get; set; }=new List<RoleDto>();
-        public List<EmployeeDetailsDto> EmployeeDetailsDtos { get; set; }= new List<EmployeeDetailsDto>();
+        public List<UserWiseRoleDto> EmployeeDetailsDtos { get; set; }= new List<UserWiseRoleDto>();
     }
 }

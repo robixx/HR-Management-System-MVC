@@ -9,7 +9,8 @@ namespace Itc.Hris.Application.Interfaces
 {
     public interface IUserInformation
     {
-        Task<(string Message, bool Status, List<EmployeeDetailsDto> user_list)> GetEmployeesInformationAsync();
+        Task<(string Message, bool Status, List<UserWiseRoleDto> user_list)> GetEmployeesInformationAsync();
         Task<(string Message, bool Status, EmployeeDetailsDto user_list)> GetEmpInformationAsync( long EnployeeId);
+        Task<(string Message, bool Status)> AssignRoleAsync( long EmployeeId, int roleId);
     }
 }

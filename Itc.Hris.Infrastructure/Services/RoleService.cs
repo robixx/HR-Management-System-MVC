@@ -81,12 +81,26 @@ namespace Itc.Hris.Infrastructure.Services
         {
             try
             {
+                var isUsed = await _db.AppRolePermission
+                   .AnyAsync(x => x.RoleId == id);
+
+                if (isUsed)
+                {
+                    return ("This role is assigned to employees. You cannot delete it.", false);
+                }
+
+                // 2. Find Role
                 var entity = await _db.AppRole.FindAsync(id);
-            if (entity == null) return ("Role not found", false);
-            _db.AppRole.Remove(entity);
-            await _db.SaveChangesAsync();
-            return ($"{entity.RoleName} deleted successfully", true);
-           }
+
+                if (entity == null)
+                    return ("Role not found", false);
+
+                // 3. Delete Role
+                _db.AppRole.Remove(entity);
+                await _db.SaveChangesAsync();
+
+                return ($"{entity.RoleName} deleted successfully", true);
+            }
             catch (Exception ex)    
             {
                 return ($"Service-->:{nameof(RoleService)} and ActionMethod-->{nameof(DeleteAsync)} Error:{ex.Message}", false);

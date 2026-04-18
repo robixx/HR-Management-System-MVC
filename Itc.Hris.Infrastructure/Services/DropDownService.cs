@@ -23,6 +23,7 @@ namespace Itc.Hris.Infrastructure.Services
             try
             {
                 var userlist = await _dbcontext.AppRole
+                    .Where(e=>e.IsActive==1)
                     .Select(x => new DropDownDto
                     {
                         Id = x.RoleId,

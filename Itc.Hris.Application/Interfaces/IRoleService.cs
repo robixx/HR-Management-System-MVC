@@ -12,5 +12,6 @@ namespace Itc.Hris.Application.Interfaces
         Task<(string Message, bool Status)> CreateAsync(RoleDto role);
         Task<(string Message, bool Status)> UpdateAsync(RoleDto role);
         Task<(string Message, bool Status)> DeleteAsync(int id);
+        
     }
 }

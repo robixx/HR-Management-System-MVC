@@ -1,0 +1,22 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Itc.Hris.Application.ModelView
+{
+    public class UserWiseRoleDto
+    {
+        public long employeeId { get; set; }       
+        public int designationId { get; set; }      
+        public int unitId { get; set; }
+        public string? employeeCode { get; set; }
+        public string? profileName { get; set; }
+        public string? fullname { get; set; }      
+        public string? email { get; set; }
+        public string? department { get; set; }
+        public string? designation { get; set; }
+        public int roleId { get; set; } = 0;
+    }
+}

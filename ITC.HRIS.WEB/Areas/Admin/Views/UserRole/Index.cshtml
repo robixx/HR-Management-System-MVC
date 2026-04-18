@@ -154,7 +154,7 @@
                                                 <td>
                                                     @Html.DropDownList(
                                                         "RoleId_" + emp.employeeId,
-                                                        (SelectList)ViewBag.rolelist,
+                                                        new SelectList(ViewBag.rolelist, "Value", "Text", emp.roleId),
                                                         " Select Role ",
                                                         new { @class = "form-control select2" }
                                                     )
@@ -464,5 +464,30 @@
             }
         });
     }
+
+    $('.assign-btn').click(function(){
+        var empId = $(this).data('empid');
+        var roleVal = $('#RoleId_' + empId).val();
+         var selectedRoleId = parseInt(roleVal);
+        debugger;
+        $.ajax({
+            url: '/Admin/UserRole/AssignRole',
+            type: 'POST',            
+            data: { EmployeeId: parseInt(empId), RoleId: parseInt(roleVal) },
+            success: function (res) {
+                if(res.status){
+                     toastr["success"]("", res.message); 
+                      setTimeout(function () {
+                        window.location.reload();
+                     }, 1500);
+                }else{
+                     toastr["warning"]("", res.message) ;  
+                }
+            },
+            error: function () {
+                toastr["warning"]("", "Error assigning role")  
+            }
+        });
+    });
 
 </script>
