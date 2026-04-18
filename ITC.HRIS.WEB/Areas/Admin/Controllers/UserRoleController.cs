@@ -1,6 +1,7 @@
 using Itc.Hris.Application.Interfaces;
-using Microsoft.AspNetCore.Mvc;
 using Itc.Hris.Application.ModelView;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace ITC.HRIS.WEB.Areas.Admin.Controllers
 {
@@ -8,14 +9,29 @@ namespace ITC.HRIS.WEB.Areas.Admin.Controllers
     public class UserRoleController : Controller
     {
         private readonly IRoleService _roleService;
-        public UserRoleController(IRoleService roleService)
+        private readonly IDropdown _dropdown;
+        private readonly IUserInformation _userInformation;
+        public UserRoleController(IRoleService roleService, IDropdown dropdown, IUserInformation userInformation)
         {
             _roleService = roleService;
+            _dropdown = dropdown;
+            _userInformation = userInformation;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var roles = await _roleService.GetAllAsync();
+            ViewBag.userlist = new SelectList(await _dropdown.getUserAsync(), "Id", "Name");
+            ViewBag.rolelist= new SelectList(await _dropdown.getRoleAsync(), "Id", "Name");
+            var empinfo= await _userInformation.GetEmployeesInformationAsync();
+
+            var result = new PermissionShowDto
+            {
+                RoleDtos = roles.data_list ?? new List<RoleDto>(),
+                EmployeeDetailsDtos = empinfo.user_list ?? new List<EmployeeDetailsDto>()
+            };
+
+            return View(result);
         }
 
         public async Task<IActionResult> List()
@@ -37,25 +53,18 @@ namespace ITC.HRIS.WEB.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Save(RoleDto role)
+        public async Task<IActionResult> CreateRoleSave([FromBody] RoleDto roleData)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            if (role.RoleId == 0)
-            {
-                await _roleService.CreateAsync(role);
-                return Json(new { status = true, message = "Created" });
-            }
-            else
-            {
-                var updated = await _roleService.UpdateAsync(role);
-                if (updated.Status == false) return Json(new { status = false, message = "Not found" });
-                return Json(new { status = true, message = "Updated" });
-            }
+           
+                var result=await _roleService.CreateAsync(roleData);
+                return Json(new { status = result.Status, message = result.Message });
+            
         }
 
         [HttpPost]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> RoleDelete(int id)
         {
             var result = await _roleService.DeleteAsync(id);
             return Json(new { status = result.Status, message = result.Message });

@@ -9,11 +9,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 // Add DbContext (configure your connection string in appsettings.json)
-var conn = builder.Configuration.GetConnectionString("DefaultConnection") ?? "Server=(localdb)\\mssqllocaldb;Database=HRIS;Trusted_Connection=True;";
+var conn = builder.Configuration.GetConnectionString("DefaultConnection") ?? "Server=DESKTOP-FH0NH88;Database=ihelp_db_live_TEST;Trusted_Connection=True;";
 builder.Services.AddDbContext<ApplicationDbContext>(opt => opt.UseSqlServer(conn));
 
 // Register application services (implemented in Infrastructure)
 builder.Services.AddScoped<IRoleService, RoleService>();
+builder.Services.AddScoped<IDropdown, DropDownService>();
+builder.Services.AddScoped<IUserInformation, EmployeeInfomationService>();
 
 var app = builder.Build();
 

@@ -7,7 +7,7 @@ namespace Itc.Hris.Application.Interfaces
 {
     public interface IRoleService
     {
-        Task<(string Message, bool Status,IEnumerable<RoleDto>data_list)> GetAllAsync();
+        Task<(string Message, bool Status,List<RoleDto>data_list)> GetAllAsync();
         Task<(string Message, bool Status, RoleDto? data)> GetByIdAsync(int id);
         Task<(string Message, bool Status)> CreateAsync(RoleDto role);
         Task<(string Message, bool Status)> UpdateAsync(RoleDto role);

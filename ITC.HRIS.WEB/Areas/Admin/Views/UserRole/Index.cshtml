@@ -1,26 +1,208 @@
-﻿@{
+﻿
+@model Itc.Hris.Application.ModelView.PermissionShowDto
+@{
     
     ViewBag.Title = "UserRole";
-    ViewBag.pTitle = "UserRole";
+    ViewBag.pTitle = "Role & Permission Management";
     ViewBag.pageTitle = "HRIS";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    int i = 1;
 }
 @section styles{
+    <link href="@Url.Content("~/assets/libs/select2/css/select2.min.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/assets/libs/bootstrap-datepicker/css/bootstrap-datepicker.min.css")" rel="stylesheet" />
     <link href="@Url.Content("~/assets/libs/admin-resources/jquery.vectormap/jquery-jvectormap-1.2.2.css")" rel="stylesheet" />
     <link href="@Url.Content("~/assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css")" rel="stylesheet" />
     <link href="@Url.Content("~/assets/libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css")" rel="stylesheet" />
-
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/assets/libs/toastr/build/toastr.min.css")">
 }
+<style>
+    .card-header{
+        background-color: rgb(255 255 255) !important;
+    }
+    .nav-tabs .nav-link.active {
+        font-weight:700;
+        color:darkblue !important;
+    }
+    .action-btns {
+        opacity: 0;
+        transition: 0.2s;
+    }
+
+    .role-row:hover .action-btns {
+        opacity: 1;
+    }
+    .avatar-circle {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #4e73df, #1cc88a);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+    }
+</style>
 
 <div class="row">
-    <div class="col-12">
-        <div class="card">           
-            <div class="card-body">
-                <a class="btn btn-primary btn-sm" id="btnrole">New Role</a>
+    <div class="col-12">       
+        <div class="card">
+            <div class="card-header">
+                <ul class="nav nav-tabs card-header-tabs" id="roleTabs">                    
+                    <li class="nav-item">
+                        <a class="nav-link active" data-bs-toggle="tab" href="#roles">Roles</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="tab" href="#assign">Assign User</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="card-body tab-content">           
+
+                <!-- 🔹 Role Setup -->
+                <div class="tab-pane fade show active" id="roles">
+                     <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-3">
+                        <h5 class="mb-2 mb-md-0">Role wise Page Permission</h5>
+                        <a href="#" class="btn btn-sm btn-primary" id="btnNew_role"><i class="fas fa-plus me-2"> </i> New Role</a>
+                    </div>
+                      <div class="table-responsive">
+                           <table class="table table-hover align-middle">
+                                <tbody>
+
+                                    @foreach(var role in Model.RoleDtos)
+                                    {
+                                        <tr class="role-row">
+                                            <td>@role.RoleName</td>
+                                            <td>
+                                                <button class="btn btn-sm btn-primary" onclick="openPermission('@role.RoleName')">
+                                                    Manage
+                                                </button>
+                                            </td>
+                                            <td>
+                                            <span class="badge @(role.IsActive == 1 ? "bg-success" : "bg-danger")">
+                                                @(role.IsActive == 1 ? "Active" : "Inactive")
+                                            </span>
+                                            </td>
+                                            <td class="text-end action-btns">
+                                            <a href="javascript:void(0);"
+                                                   class="text-primary me-2"
+                                                   onclick="editRole(@role.RoleId,'@role.RoleName','@role.Description',@role.IsActive)">
+                                                <i class="fas fa-pencil-alt"></i>
+                                            </a>
+                                            <a href="javascript:void(0);"
+                                                   class="text-danger"
+                                                   onclick="deleteRole(@role.RoleId)">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                    
+                                </tbody>
+                           </table>
+                      </div>
+                   
+                </div>
+
+                <!-- 🔹 Assign User -->
+                <div class="tab-pane fade" id="assign">
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <div class="table-responsive">
+                                <table id="datatable" class="table table-hover nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                                    <thead style="background:linear-gradient(180deg, rgb(80 47 47 / 15%), rgb(28 34 82 / 28%));">
+                                        <tr>
+                                            <th>Serial</th>
+                                            <th>Employee Name</th>                                            
+                                            <th>Email</th>                                            
+                                            <th>Department</th>
+                                            <th>Role</th>
+                                            <th>Assign</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach(var emp in Model.EmployeeDetailsDtos)
+                                        {
+                                             <tr>
+                                                <td>@i</td>
+                                                <td>
+                                                    <div class="d-flex align-items-center gap-3">
+
+                                                            <div class="avatar-circle">
+                                                                @emp.profileName?.Substring(0,1).ToUpper()
+                                                            </div>
+                                                       
+                                                        <!-- Name + Designation -->
+                                                        <div>
+                                                            <div class="fw-semibold">
+                                                                @emp.profileName
+                                                            </div>
+                                                            <small class="text-muted">
+                                                               @emp.department
+                                                            </small>
+                                                             <small style="color:darkred;">
+                                                               ( @emp.employeeCode )
+                                                            </small>
+                                                        </div>
+
+                                                    </div>
+                                                </td>                                                
+                                                <td>@emp.email</td>
+                                                <td>@emp.designation</td>
+                                                <td>
+                                                    @Html.DropDownList(
+                                                        "RoleId_" + emp.employeeId,
+                                                        (SelectList)ViewBag.rolelist,
+                                                        " Select Role ",
+                                                        new { @class = "form-control select2" }
+                                                    )
+                                                </td>
+                                                <td>
+                                                     <button type="button"
+                                                            class="btn btn-sm btn-primary assign-btn"
+                                                            data-empid="@emp.employeeId">
+                                                        Assign
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            i++;
+                                        }
+                                        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
             </div>
         </div>
+
+    </div>   
+</div>
+
+<div class="modal fade" id="permissionModal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modaltitle">Assign Permissions</h5>
+                <button class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+
+
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-success" id="btnaction">Save Permission</button>
+            </div>
+
+        </div>
     </div>
-   
 </div>
 
 
@@ -28,13 +210,259 @@
 
 @section scripts {
     <!-- apexcharts -->
-
+    <script src="@Url.Content("~/assets/libs/select2/js/select2.min.js")"></script>
+    <script src="@Url.Content("~/assets/libs/spectrum-colorpicker2/spectrum.min.js")"></script>
+    <script src="@Url.Content("~/assets/libs/bootstrap-datepicker/js/bootstrap-datepicker.min.js")"></script>
+    <script src="@Url.Content("~/assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js")"></script>
     <script src="@Url.Content("~/assets/libs/admin-resources/jquery.vectormap/jquery-jvectormap-1.2.2.min.js")"></script>
     <script src="@Url.Content("~/assets/libs/admin-resources/jquery.vectormap/maps/jquery-jvectormap-us-merc-en.js")"></script>
     <script src="@Url.Content("~/assets/libs/datatables.net/js/jquery.dataTables.min.js")"></script>
     <script src="@Url.Content("~/assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js")"></script>
     <script src="@Url.Content("~/assets/libs/datatables.net-responsive/js/dataTables.responsive.min.js")"></script>
     <script src="@Url.Content("~/assets/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js")"></script>
+     <script src="@Url.Content("~/assets/js/pages/datatables.init.js")"></script>
+      <script src="@Url.Content("~/assets/libs/toastr/build/toastr.min.js")"></script>
+
+        <!-- toastr init -->
+     <script src="@Url.Content("~/assets/js/pages/toastr.init.js")"></script>
+    <script src="@Url.Content("~/assets/libs/bootstrap-maxlength/bootstrap-maxlength.min.js")"></script>
+    <script src="@Url.Content("~/assets/js/pages/form-advanced.init.js")"></script> 
     <script src="@Url.Content("~/assets/js/app.js")"></script>
 
+
 }
+<script src="~/assets/libs/jquery/jquery.min.js"></script>
+<script>
+
+
+    var modalMode="";
+
+
+    ///reset modal 
+    $('#permissionModal').on('hidden.bs.modal', function () {
+
+        // reset all inputs
+        $('#permissionModal input').val('');
+        $('#permissionModal input[type="checkbox"]').prop('checked', false);
+
+        // reset validation
+        $('.is-invalid').removeClass('is-invalid');
+        $('#validationSummary').addClass('d-none').html('');
+
+        // clear modal body (important for your dynamic HTML)
+        $('#permissionModal .modal-body').html('');
+    });
+
+     function openPermission(role) {
+         $('#permissionModal .modal-body').html('');
+        document.querySelector(".modal-title").innerText = role + " Permissions";
+        var modal = new bootstrap.Modal(document.getElementById('permissionModal'));
+        modal.show();
+    }
+
+    function addRole() {
+        var roleName = document.getElementById("roleName").value;
+
+        if (roleName === "") return alert("Enter role name");
+
+        var table = document.getElementById("roleTable");
+
+        var row = `
+            <tr>
+                <td>${roleName}</td>
+                <td>
+                    <button class="btn btn-sm btn-success" onclick="openPermission('${roleName}')">
+                        Manage
+                    </button>
+                </td>
+            </tr>
+        `;
+
+        table.innerHTML += row;
+
+        document.getElementById("roleName").value = "";
+
+        var modal = bootstrap.Modal.getInstance(document.getElementById('roleModal'));
+        modal.hide();
+    }
+
+    $('#btnNew_role').click(function(){
+       openRoleModal();
+    })
+
+    function openRoleModal() {
+
+        modalMode = "role";
+        $('#permissionModal .modal-body').html('');
+        $('#modaltitle').text("Role Create");
+        $('#btnaction').text("Save Role");  
+        
+        var inHTML = `
+                    <div class="row">
+                        <input type="hidden" id="modalMode">
+                        <input type="hidden" id="roleId">
+                        <div class="col-12 mb-3">
+                            <label class="form-label">Role Name</label>
+                            <input type="text" id="roleName" class="form-control">
+                            <div class="invalid-feedback">Role Name is required</div>
+                        </div>
+
+                        <div class="col-12 mb-3">
+                            <label class="form-label">Description</label>
+                            <input type="text" id="roleDesc" class="form-control">
+                        </div>
+
+                        <div class="col-12 mb-3">
+                            <label class="form-label d-block">Status</label>
+
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="isActive" checked>
+                                <label class="form-check-label">Active</label>
+                            </div>
+                        </div>
+                       <div id="validationSummary" class="alert alert-danger d-none py-2"></div>
+
+             </div>
+        `;
+
+        $('#permissionModal .modal-body').html(inHTML);
+        $('#modalMode').val(modalMode);
+        $('#permissionModal').modal('show');
+    }
+
+    $('#btnaction').click(function(){
+         if (modalMode === "role"){
+             let roleName = $('#roleName').val().trim();
+
+        // RESET ERROR
+        $('#validationSummary').addClass('d-none').html('');
+        $('#roleName').removeClass('is-invalid');
+
+        // VALIDATION
+            if (roleName === "") {
+                $('#roleName').addClass('is-invalid');
+                $('#validationSummary')
+                    .removeClass('d-none')
+                    .html("Role Name is required");
+                return;
+            }
+            
+            let roleData = {
+                    RoleId: $('#roleId').val() ? parseInt($('#roleId').val()) : 0,
+                    RoleName: $('#roleName').val().trim(),
+                    Description: $('#roleDesc').val(),
+                    IsActive: $('#isActive').prop('checked') ? 1:0
+            };
+            
+            $.ajax({
+                url: '/Admin/UserRole/CreateRoleSave',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(roleData),
+
+                success: function (res) {
+                    if(res.status){
+                         toastr["success"]("", res.message); 
+                         setTimeout(function () {
+                                window.location.reload();
+                         }, 1500);
+                    }else{
+                         toastr["warning"]("", res.message) ;  
+                    }
+                                   
+                    $('#permissionModal').modal('hide');
+                },
+
+                error: function () {
+                    
+                    toastr["warning"]("", "Error saving role")  
+                    
+                }
+            });
+         }else{
+             alert("permission");
+         }
+    
+    })
+
+    $(document).on('input', '#roleName', function () {
+        $(this).removeClass('is-invalid');
+        $('#validationSummary').addClass('d-none');
+    });
+
+    // for edit
+
+    function editRole(roleid, rolename, description, isactive){
+        modalMode = "role";
+        $('#permissionModal .modal-body').html('');
+        $('#modaltitle').text("Role Edit");
+        $('#btnaction').text("Update Role");  
+        
+        var inHTML = `
+                    <div class="row">
+                        <input type="hidden" id="modalMode">
+                        <input type="hidden" id="roleId">
+                        <div class="col-12 mb-3">
+                            <label class="form-label">Role Name</label>
+                            <input type="text" id="roleName" class="form-control">
+                            <div class="invalid-feedback">Role Name is required</div>
+                        </div>
+
+                        <div class="col-12 mb-3">
+                            <label class="form-label">Description</label>
+                            <input type="text" id="roleDesc" class="form-control">
+                        </div>
+
+                        <div class="col-12 mb-3">
+                            <label class="form-label d-block">Status</label>
+
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="isActive" checked>
+                                <label class="form-check-label">Active</label>
+                            </div>
+                        </div>
+                       <div id="validationSummary" class="alert alert-danger d-none py-2"></div>
+
+             </div>
+        `;
+
+        $('#permissionModal .modal-body').html(inHTML);
+       
+        $('#modalMode').val(modalMode);
+        $('#roleId').val(roleid);
+        $('#roleName').val(rolename);
+        $('#roleDesc').val(description);
+        $('#isActive').prop('checked', isactive);
+        
+        $('#permissionModal').modal('show');
+    }
+
+
+    function deleteRole(roleId){
+        debugger;
+        $.ajax({
+            url: '/Admin/UserRole/RoleDelete',
+            type: 'POST',            
+            data: {id: roleId},
+            success: function (res) {
+                 if(res.status){
+                     toastr["success"]("", res.message); 
+                     setTimeout(function () {
+                        window.location.reload();
+                     }, 1500);
+
+                 }else{
+                    toastr["warning"]("", res.message) ;  
+                 }
+                                   
+                    $('#permissionModal').modal('hide');
+            },
+            error: function () {
+                    
+              toastr["warning"]("", "Error saving role")  
+                    
+            }
+        });
+    }
+
+</script>

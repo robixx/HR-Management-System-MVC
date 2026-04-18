@@ -11,6 +11,8 @@ namespace Itc.Hris.Infrastructure.Data
 
         public DbSet<AppRole> AppRole { get; set; }
         public DbSet<Permission> Permissions { get; set; }
+        public DbSet<VwEmployeeDetails> VwEmployeeDetails { get; set; }
+        public DbSet<VwEmployeeName> VwEmployeeName { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -26,6 +28,16 @@ namespace Itc.Hris.Infrastructure.Data
             {
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.Key).IsRequired().HasMaxLength(100);
+            });
+            modelBuilder.Entity<VwEmployeeDetails>(entity =>
+            {
+                entity.HasNoKey(); 
+                entity.ToView("vw_employee_details"); 
+            });
+            modelBuilder.Entity<VwEmployeeName>(entity =>
+            {
+                entity.HasNoKey();
+                entity.ToView("vw_employee_name");
             });
         }
     }
