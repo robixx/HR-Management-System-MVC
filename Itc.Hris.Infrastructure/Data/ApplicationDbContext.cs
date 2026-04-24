@@ -14,6 +14,7 @@ namespace Itc.Hris.Infrastructure.Data
         public DbSet<VwEmployeeDetails> VwEmployeeDetails { get; set; }
         public DbSet<VwEmployeeName> VwEmployeeName { get; set; }
         public DbSet<AppRolePermission> AppRolePermission { get; set; }
+        public DbSet<AppMenuSetUp> AppMenuSetUp { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -53,6 +54,12 @@ namespace Itc.Hris.Infrastructure.Data
                 entity.Property(e => e.RoleId).HasColumnName("RoleId");
                 entity.Property(e => e.EmployeeId).HasColumnName("EmployeeId");
                 entity.Property(e => e.IsActive).HasColumnName("IsActive");
+            });
+
+            modelBuilder.Entity<AppMenuSetUp>(entity =>
+            {
+                entity.HasKey(e => e.MenuId);
+                
             });
         }
     }

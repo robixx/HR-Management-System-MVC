@@ -1,22 +1,38 @@
-using Itc.Hris.Infrastructure.Data;
 using Itc.Hris.Application.Interfaces;
+using Itc.Hris.Infrastructure.Data;
 using Itc.Hris.Infrastructure.Services;
+using Itc.Hris.Infrastructure.Utility;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+
 
 // Add DbContext (configure your connection string in appsettings.json)
 var conn = builder.Configuration.GetConnectionString("DefaultConnection") ?? "Server=DESKTOP-FH0NH88;Database=ihelp_db_live_TEST;Trusted_Connection=True;";
 builder.Services.AddDbContext<ApplicationDbContext>(opt => opt.UseSqlServer(conn));
+builder.Services.AddControllersWithViews();
+builder.Services.AddHttpContextAccessor();
 
-// Register application services (implemented in Infrastructure)
-builder.Services.AddScoped<IRoleService, RoleService>();
-builder.Services.AddScoped<IDropdown, DropDownService>();
-builder.Services.AddScoped<IUserInformation, EmployeeInfomationService>();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromHours(8); // session timeout
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
 
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.Cookie.Name = "UserAuthCookie";
+        options.LoginPath = "/Home/Index"; // redirect to login page
+        options.ExpireTimeSpan = TimeSpan.FromHours(8);
+        options.SlidingExpiration = true;
+    });
+
+builder.Services.InjectServices();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
