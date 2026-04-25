@@ -26,26 +26,22 @@ namespace ITC.HRIS.WEB.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginViewModel model)
+        public async Task<IActionResult> Login([FromBody] LoginViewModel model)
         {
             if (!ModelState.IsValid)
                 return RedirectToAction("Index");
 
             var (message, status, list) = await _auth.LoginAsync(model);
-            if (list.UserId > 0)
-            {
-                TempData["Error"] = "Invalid username or password";
-                return RedirectToAction("Index");
-            }
+            
 
-            if (!status) // password hash verify
+            if (status) // password hash verify
             {
                 // ✅ Save info in session
                 var claims = new List<Claim>
                     {
-                        new Claim(ClaimTypes.Name, list.DispalyName??""),
+                        new Claim(ClaimTypes.Name, list.DisplayName??""),
                         new Claim("UserId", list.UserId.ToString()),
-                        new Claim("EmployeeId", list.EmployeeeId.ToString()),
+                        new Claim("EmployeeId", list.EmployeeId.ToString()),
                         new Claim("RoleName", list.RoleName ?? ""),
                         new Claim("RoleId", list.RoleId.ToString()),
                         new Claim("ImageName", list.ImageName ?? "/images/default.png"),
@@ -61,11 +57,21 @@ namespace ITC.HRIS.WEB.Controllers
                         ExpiresUtc = DateTimeOffset.Now.AddHours(8)
                     });
 
-                return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
+                    return Ok(new
+                    {
+                        status = true,
+                        message = "Login successful",
+                        redirectUrl = Url.Action( "Index", "Dashboard", new { area = "Admin" })
+                    });
             }
 
-            TempData["Error"] = "Invalid username or password";
-            return RedirectToAction("Index");
+            return Ok(new
+            {
+                message= "Invalid username or password",
+                status=false,
+                redirectUrl = Url.Action("Index"),
+            });
+            
         }
 
 

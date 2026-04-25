@@ -1,5 +1,6 @@
-using Microsoft.EntityFrameworkCore;
+using Itc.Hris.Application.ModelView;
 using Itc.Hris.Model.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Itc.Hris.Infrastructure.Data
 {
@@ -15,6 +16,7 @@ namespace Itc.Hris.Infrastructure.Data
         public DbSet<VwEmployeeName> VwEmployeeName { get; set; }
         public DbSet<AppRolePermission> AppRolePermission { get; set; }
         public DbSet<AppMenuSetUp> AppMenuSetUp { get; set; }
+        public DbSet<LoginResponse> LoginResponse { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -61,6 +63,13 @@ namespace Itc.Hris.Infrastructure.Data
                 entity.HasKey(e => e.MenuId);
                 
             });
+            modelBuilder.Entity<LoginResponse>(entity =>
+            {
+                entity.HasNoKey();
+                entity.ToView("V2_usp_check_user_login");
+
+            });
+
         }
     }
 }

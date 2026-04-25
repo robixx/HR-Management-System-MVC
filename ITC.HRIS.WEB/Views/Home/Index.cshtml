@@ -21,9 +21,10 @@
                 </div>
 
                 <!-- FORM -->
-                <form id="loginForm" method="post" action="@Url.Action("DoLogin", "Default", new { area = "Login" })">
+                <form id="loginForm" method="post">
 
                     <div id="loginError" class="text-danger" style="display:none;"></div>
+
 
                     <!-- Username -->
                     <div class="mb-3">
@@ -83,41 +84,40 @@
 
 </div>
 
-    @section scr {
-        
-    <script src="@Url.Content("~/assets/libs/admin-resources/jquery.vectormap/jquery-jvectormap-1.2.2.min.js")"></script>
-    <script src="@Url.Content("~/assets/libs/admin-resources/jquery.vectormap/maps/jquery-jvectormap-us-merc-en.js")"></script>
-    <script src="@Url.Content("~/assets/js/app.js")"></script>
-    }
-<script src="~/assets/libs/jquery/jquery.min.js"></script>
+
+   <script src="~/assets/libs/jquery/jquery.min.js"></script>
     <script>
         $(document).ready(function () {
             $("#loginForm").submit(function (event) {
 
                 event.preventDefault();
                 let LoginRequest = {
-                    UserName: $("#username").val(),
-                    Password: $("#userpassword").val(),
+                    LoginName: $("#username").val(),
+                    Password: $("#password").val(),
                 };
                 $("#spinner").show();
                 $("#login").prop("disabled", true);
-
+                debugger;
                 $.ajax({
-                    url: "@Url.Action("DoLogin", "Default", new { area = "Login" })",
+                url: "@Url.Action("Login", "Home")",
                     type: "POST",
                     contentType: "application/json",
                     data: JSON.stringify(LoginRequest),
                     success: function (response) {
-                     var redirectUrl = response.redirectUrl; // Get the redirect URL from response
+                    debugger;
+                    // var redirectUrl = response.redirectUrl; // Get the redirect URL from response
+                     
                     if (response.status)
                     {
-            // Redirect to the returned URL
-                          window.location.href = redirectUrl;
+                        debugger;
+           
+                      window.location.href = response.redirectUrl;
                         } else {
+                            debugger;
                              $("#loginError").text(response.message).show(); // Show error message
                         }
-                    }
-                    ,
+                    },
+                    
                     error: function (xhr) {
                         alert("Login failed: " + xhr.responseText);
                     },

@@ -8,9 +8,9 @@ namespace Itc.Hris.Application.ModelView
 {
     public class LoginResponse
     {
-        public long EmployeeeId { get; set; }
+        public long EmployeeId { get; set; }
         public long UserId { get; set; }
-        public string? DispalyName { get; set; }
+        public string? DisplayName { get; set; }
         public string? RoleName { get; set; }
         public string? ImageName { get; set; }
         public int RoleId { get; set; }

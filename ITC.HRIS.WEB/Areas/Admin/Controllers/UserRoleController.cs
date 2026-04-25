@@ -1,11 +1,13 @@
 using Itc.Hris.Application.Interfaces;
 using Itc.Hris.Application.ModelView;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace ITC.HRIS.WEB.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize]
     public class UserRoleController : Controller
     {
         private readonly IRoleService _roleService;
