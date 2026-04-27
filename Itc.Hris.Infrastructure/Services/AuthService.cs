@@ -29,14 +29,19 @@ namespace Itc.Hris.Infrastructure.Services
                      new SqlParameter("@password", model.Password),
                 };                           
 
-                var result= await _dbcontext.LoginResponse.FromSqlRaw("EXEC V2_usp_check_user_login @loginName, @password", parameters).ToListAsync();
+                var result= await _dbcontext.LoginResponse
+                    .FromSqlRaw("EXEC V2_usp_check_user_login @loginName, @password", parameters)
+                    .AsNoTracking()
+                    .ToListAsync();
 
-                if (result[0]?.UserId > 0)
+                var response = result.FirstOrDefault();
+
+                if (response != null && response.UserId > 0)
                 {
-                   
-                    return ("Login Successfully", true, result[0] ?? new LoginResponse());
+                    return ("Login Successfully", true, response);
                 }
-                return ("User Name and Password InValid", false, new LoginResponse());
+
+                return ("Invalid Username or Password", false, new LoginResponse());
 
 
             }

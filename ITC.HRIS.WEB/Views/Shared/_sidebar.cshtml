@@ -25,9 +25,10 @@
                     {
                         if (item.IsMainMenu == 1)
                         {
+
                             <li>
                                 <a href="javascript:void(0);" class="has-arrow waves-effect">
-                                    <i class="ri-store-2-line"></i>
+                                    <i class="@item.Icon"></i>
                                     <span>@item.MenuName</span>
                                 </a>
 
@@ -48,7 +49,7 @@
                         {
                             <li>
                                 <a href="@item.Urls" class="waves-effect">
-                                    <i class="ri-store-2-line"></i>
+                                    <i class="@item.Icon"></i>
                                     <span>@item.MenuName</span>
                                 </a>
                             </li>

@@ -29,23 +29,23 @@ namespace ITC.HRIS.WEB.Controllers
         public async Task<IActionResult> Login([FromBody] LoginViewModel model)
         {
             if (!ModelState.IsValid)
-                return RedirectToAction("Index");
-
-            var (message, status, list) = await _auth.LoginAsync(model);
-            
-
-            if (status) // password hash verify
             {
-                // ✅ Save info in session
+                return BadRequest(new { status = false, message = "Invalid input data" });
+            }
+
+            var (message, status, user) = await _auth.LoginAsync(model);
+
+            if (status && user != null)
+            {
                 var claims = new List<Claim>
-                    {
-                        new Claim(ClaimTypes.Name, list.DisplayName??""),
-                        new Claim("UserId", list.UserId.ToString()),
-                        new Claim("EmployeeId", list.EmployeeId.ToString()),
-                        new Claim("RoleName", list.RoleName ?? ""),
-                        new Claim("RoleId", list.RoleId.ToString()),
-                        new Claim("ImageName", list.ImageName ?? "/images/default.png"),
-                    };
+                {
+                    new Claim(ClaimTypes.Name, user.DisplayName ?? "User"),
+                    new Claim("UserId", user.UserId.ToString()),
+                    new Claim("EmployeeId", user.EmployeeId.ToString() ?? "0"),
+                    new Claim("RoleName", user.RoleName ?? "Guest"),
+                    new Claim("RoleId", user.RoleId.ToString() ?? "0"),
+                    new Claim("ImageName", user.ImageName ?? "/images/default.png"),
+                };
 
                 var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
@@ -54,24 +54,23 @@ namespace ITC.HRIS.WEB.Controllers
                     new AuthenticationProperties
                     {
                         IsPersistent = true,
-                        ExpiresUtc = DateTimeOffset.Now.AddHours(8)
+                        ExpiresUtc = DateTimeOffset.UtcNow.AddHours(8) // Use UtcNow
                     });
 
-                    return Ok(new
-                    {
-                        status = true,
-                        message = "Login successful",
-                        redirectUrl = Url.Action( "Index", "Dashboard", new { area = "Admin" })
-                    });
+                return Ok(new
+                {
+                    status = true,
+                    message = "Login successful",
+                    redirectUrl = Url.Action("Index", "Dashboard", new { area = "Admin" })
+                });
             }
 
             return Ok(new
             {
-                message= "Invalid username or password",
-                status=false,
-                redirectUrl = Url.Action("Index"),
+                status = false,
+                message = message, // Use the message returned from the service
+                redirectUrl = Url.Action("Index")
             });
-            
         }
 
 

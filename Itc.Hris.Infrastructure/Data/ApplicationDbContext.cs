@@ -75,6 +75,13 @@ namespace Itc.Hris.Infrastructure.Data
             {
                 entity.HasKey(e => e.Id);
                 entity.ToTable("app_RoleMenuPermission");
+                entity.HasIndex(e => new { e.RoleId, e.MenuId })
+                  .HasDatabaseName("UQ_Role_Menu") 
+                  .IsUnique();
+
+                
+                entity.Property(e => e.RoleId).IsRequired();
+                entity.Property(e => e.MenuId).IsRequired();
             });
 
         }
