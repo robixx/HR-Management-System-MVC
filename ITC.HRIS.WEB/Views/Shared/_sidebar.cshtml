@@ -1,4 +1,15 @@
 ﻿<!-- ========== Left Sidebar Start ========== -->
+@using Itc.Hris.Application.Interfaces
+@inject IMenu menuSet
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
+@{
+    var roleIdClaim = HttpContextAccessor.HttpContext?.User.FindFirst("RoleId")?.Value;
+    int roelid = int.TryParse(roleIdClaim, out var id) ? id : 0;
+    var userMenu = await menuSet.GetMenuList(roelid);
+}
+
+
 <div class="vertical-menu">
 
     <div data-simplebar class="h-100">
@@ -8,8 +19,45 @@
             <!-- Left Menu Start -->
             <ul class="metismenu list-unstyled" id="side-menu">
                 <li class="menu-title">Menu</li>
+                @if (userMenu != null)
+                {
+                    foreach (var item in userMenu)
+                    {
+                        if (item.IsMainMenu == 1)
+                        {
+                            <li>
+                                <a href="javascript:void(0);" class="has-arrow waves-effect">
+                                    <i class="ri-store-2-line"></i>
+                                    <span>@item.MenuName</span>
+                                </a>
 
-                <li>
+                                <ul class="sub-menu" aria-expanded="false">
+                                    @if (item.SubMenus != null)
+                                    {
+                                        foreach (var subitem in item.SubMenus)
+                                        {
+                                            <li>
+                                                <a href="@subitem.Urls">@subitem.MenuName</a>
+                                            </li>
+                                        }
+                                    }
+                                </ul>
+                            </li>
+                        }
+                        else
+                        {
+                            <li>
+                                <a href="@item.Urls" class="waves-effect">
+                                    <i class="ri-store-2-line"></i>
+                                    <span>@item.MenuName</span>
+                                </a>
+                            </li>
+                        }
+                    }
+                    
+                }
+                
+              @*   <li>
                     <a href=@Url.Action("Index", "Dashboard") class="waves-effect">
                         <i class="ri-dashboard-line"></i><span class="badge rounded-pill bg-success float-end">3</span>
                         <span>Dashboard</span>
@@ -73,7 +121,7 @@
                         <li><a href=@Url.Action("Index", "UserRole", new{Area="Admin"})>Role List</a></li>
                         
                     </ul>
-                </li>               
+                </li>      *@          
 
             </ul>
         </div>

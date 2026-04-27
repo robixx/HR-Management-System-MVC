@@ -17,6 +17,7 @@ namespace Itc.Hris.Infrastructure.Data
         public DbSet<AppRolePermission> AppRolePermission { get; set; }
         public DbSet<AppMenuSetUp> AppMenuSetUp { get; set; }
         public DbSet<LoginResponse> LoginResponse { get; set; }
+        public DbSet<AppRoleMenuPermission> AppRoleMenuPermission { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -68,6 +69,12 @@ namespace Itc.Hris.Infrastructure.Data
                 entity.HasNoKey();
                 entity.ToView("V2_usp_check_user_login");
 
+            });
+
+            modelBuilder.Entity<AppRoleMenuPermission>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.ToTable("app_RoleMenuPermission");
             });
 
         }
