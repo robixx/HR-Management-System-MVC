@@ -19,13 +19,12 @@
             <!-- Left Menu Start -->
             <ul class="metismenu list-unstyled" id="side-menu">
                 <li class="menu-title">Menu</li>
-                @if (userMenu != null)
+                @if (userMenu != null && userMenu.Any())
                 {
                     foreach (var item in userMenu)
                     {
-                        if (item.IsMainMenu == 1)
+                        if (item.IsMainMenu ==1)
                         {
-
                             <li>
                                 <a href="javascript:void(0);" class="has-arrow waves-effect">
                                     <i class="@item.Icon"></i>
@@ -33,29 +32,32 @@
                                 </a>
 
                                 <ul class="sub-menu" aria-expanded="false">
-                                    @if (item.SubMenus != null)
+                                    @foreach (var sub in item.SubMenus.OrderBy(x => x.ViewOrder))
                                     {
-                                        foreach (var subitem in item.SubMenus)
-                                        {
-                                            <li>
-                                                <a href="@subitem.Urls">@subitem.MenuName</a>
-                                            </li>
-                                        }
+                                        <li>
+                                            <a href="@sub.Urls">
+                                                @sub.MenuName
+                                            </a>
+                                        </li>
                                     }
                                 </ul>
                             </li>
                         }
                         else
                         {
-                            <li>
-                                <a href="@item.Urls" class="waves-effect">
-                                    <i class="@item.Icon"></i>
-                                    <span>@item.MenuName</span>
-                                </a>
-                            </li>
+                            if (item.ParentId == 0)
+                            {
+                                <li>
+                                    <a href="@item.Urls" class="waves-effect">
+                                        <i class="@item.Icon"></i>
+                                        <span>@item.MenuName</span>
+                                    </a>
+                                </li>
+                                
+                            }
+                            
                         }
                     }
-                    
                 }
                 
               @*   <li>
