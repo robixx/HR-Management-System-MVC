@@ -18,6 +18,7 @@ namespace Itc.Hris.Infrastructure.Data
         public DbSet<AppMenuSetUp> AppMenuSetUp { get; set; }
         public DbSet<LoginResponse> LoginResponse { get; set; }
         public DbSet<AppRoleMenuPermission> AppRoleMenuPermission { get; set; }
+        public DbSet<MenuPermissionView> MenuPermissionView { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -82,6 +83,12 @@ namespace Itc.Hris.Infrastructure.Data
                 
                 entity.Property(e => e.RoleId).IsRequired();
                 entity.Property(e => e.MenuId).IsRequired();
+            });
+            modelBuilder.Entity<MenuPermissionView>(entity =>
+            {
+                entity.HasNoKey();
+                entity.ToView("V2_GetMenuPermissionsByRole");
+
             });
 
         }

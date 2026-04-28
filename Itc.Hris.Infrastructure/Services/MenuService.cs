@@ -1,6 +1,8 @@
 ﻿using Itc.Hris.Application.Interfaces;
 using Itc.Hris.Application.ModelView;
 using Itc.Hris.Infrastructure.Data;
+using Itc.Hris.Model.Entities;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -63,6 +65,59 @@ namespace Itc.Hris.Infrastructure.Services
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<(string Message, bool Status, List<MenuPermissionDto> data)> SaveMenuPermission(int roleId)
+        {
+            try
+            {
+
+                var parameters = new SqlParameter("@RoleId", roleId);                
+
+                var result = await _dbcontext.MenuPermissionView
+                    .FromSqlRaw("EXEC V2_GetMenuPermissionsByRole @RoleId", parameters)
+                    .AsNoTracking()
+                    .ToListAsync();
+
+                var permissionList = result.Where (x => x.ParentId == 0)
+                 .Select(x => new MenuPermissionDto
+                 {
+                     RoleId = x.RoleId,
+                     MenuId = x.MenuId,
+                     MenuName = x.MenuName,
+                     HasPermission = x.HasPermission,
+                     Icon = x.Icon,
+                     ParentId = x.ParentId,
+                     IsMainMenu = x.IsMainMenu,
+                     ViewOrder = x.ViewOrder,
+                     // Map sub-menu permissions
+                     Permissions = result
+                         .Where(sub => sub.ParentId == x.MenuId && sub.IsMainMenu != 1)
+                         .Select(sub => new MenuPermissionDto
+                         {
+                             RoleId = sub.RoleId,
+                             MenuId = sub.MenuId,
+                             MenuName = sub.MenuName,
+                             HasPermission = sub.HasPermission,
+                             Icon = sub.Icon,
+                             ParentId = sub.ParentId,
+                             IsMainMenu = sub.IsMainMenu,
+                             ViewOrder = sub.ViewOrder
+                         })
+                         .OrderBy(sub => sub.ViewOrder)
+                         .ToList()
+                 })
+                 .OrderBy(x => x.ViewOrder)
+                 .ToList();
+
+
+                return ("Menu permissions retrieved successfully", true, permissionList);
+
+            }
+            catch (Exception ex)
+            {
+                return ($"Error : {ex.Message}", false, new List<MenuPermissionDto>());
             }
         }
     }

@@ -1,10 +1,13 @@
-﻿@{
+﻿@model List<Itc.Hris.Application.ModelView.MenuPermissionDto>
+
+
+@{
     
     ViewBag.Title = "Page Permission";
     ViewBag.pTitle = "Role wise Page Permission";
     ViewBag.pageTitle = "HRIS";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    int i = 1;
+    
 }
 @section styles {
     <link href="@Url.Content("~/assets/libs/select2/css/select2.min.css")" rel="stylesheet" />
@@ -20,28 +23,107 @@
     <div class="col-12">
         <div class="card">
             <div class="card-body">
-                <div class="input-group">
-                    <select class="form-select" id="roleDropdown">
-                        <option>Select Role</option>
-                        <option>Admin</option>
-                        <option>User</option>
-                    </select>
-
-                    <button class="btn btn-primary" type="button">
-                        <i class="fas fa-search me-1"></i>Load Page
+                <form asp-area="Admin" asp-controller="Security" asp-action="PagePermission" method="post">
+                    <div class="row g-2 mb-3">
+                        <div class="col-md-4">
+                            <label class="form-label">Role Selection</label>
+                            @Html.DropDownList("RoleId", ViewBag.RoleList as SelectList, "  Select Role  ", new { @class = "form-control select2" })
+                        </div>
+                        <div class="col-auto d-flex align-items-end">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-search me-1"></i> Load Page
+                            </button>
+                        </div>
+                    </div>
+                </form>                 
+              
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            
+            <div class="card-body">              
+                <div class="text-end">
+                   
+                    <button type="submit" form="menuPermissionForm" class="btn btn-primary btn-sm">
+                        <i class="bi bi-save me-1"></i>Save Permissions
                     </button>
                 </div>
+                <div class="menu-tree  mt-4">
+                        @if (Model == null || !Model.Any())
+                        {
+                            <div class="alert alert-warning">
+                                <i class="bi bi-exclamation-triangle me-2"></i>
+                                No menu permissions available.
+                                @if (!string.IsNullOrEmpty(ViewBag.Message))
+                                {
+                                    <br /><small>@ViewBag.Message</small>
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            foreach (var menu in Model)
+                            {
+                                <div class="menu-item mb-3">
+                                    <!-- Main Menu -->
+                                    <div class="main-menu d-flex align-items-center p-2 rounded"
+                                         style="background-color: #f8f9fa; border-left: 4px solid #0d6efd;">
+                                        <div class="form-check">
+                                            <input class="form-check-input main-menu-check"
+                                                   type="checkbox"
+                                                   name="SelectedMenus"
+                                                   value="@menu.MenuId"
+                                                   id="menu_@menu.MenuId"
+                                            @(menu.HasPermission == 1 ? "checked" : "")
+                                                   data-menu-id="@menu.MenuId">
+                                            <label class="form-check-label fw-bold ms-2" for="menu_@menu.MenuId">
+                                                @if (!string.IsNullOrEmpty(menu.Icon))
+                                                {
+                                                    <i class="@menu.Icon me-2"></i>
+                                                }
+                                                @menu.MenuName
+                                            </label>
+                                        </div>
+                                    </div>
 
-                   
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle">
-                        <tbody>
-                        </tbody>
-                    </table>
-                </div>
-                   
+                                    <!-- Sub Menus -->
+                                    @if (menu.Permissions != null && menu.Permissions.Any())
+                                    {
+                                        <div class="sub-menu ms-4 mt-2 ps-3 border-start">
+                                            @foreach (var sub in menu.Permissions)
+                                            {
+                                                <div class="sub-menu-item d-flex align-items-center py-1">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input sub-menu-check"
+                                                               type="checkbox"
+                                                               name="SelectedMenus"
+                                                               value="@sub.MenuId"
+                                                               id="sub_@sub.MenuId"
+                                                        @(sub.HasPermission == 1 ? "checked" : "")
+                                                               data-parent-id="@menu.MenuId">
+                                                        <label class="form-check-label ms-2" for="sub_@sub.MenuId">
+                                                            @if (!string.IsNullOrEmpty(sub.Icon))
+                                                            {
+                                                                <i class="@sub.Icon me-2 text-muted"></i>
+                                                            }
+                                                            <span class="text-secondary">@sub.MenuName</span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        }
+
+                    </div>
+
             </div>
-
         </div>
     </div>
 </div>
@@ -63,7 +145,7 @@
     <script src="@Url.Content("~/assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js")"></script>
     <script src="@Url.Content("~/assets/libs/datatables.net-responsive/js/dataTables.responsive.min.js")"></script>
     <script src="@Url.Content("~/assets/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js")"></script>
-    <script src="@Url.Content("~/assets/js/pages/datatables.init.js")"></script>
+   @*  <script src="@Url.Content("~/assets/js/pages/datatables.init.js")"></script> *@
     <script src="@Url.Content("~/assets/libs/toastr/build/toastr.min.js")"></script>
 
     <!-- toastr init -->
