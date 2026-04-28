@@ -2,8 +2,10 @@
 using Itc.Hris.Application.ModelView;
 using Itc.Hris.Infrastructure.Data;
 using Itc.Hris.Model.Entities;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,9 +18,11 @@ namespace Itc.Hris.Infrastructure.Services
     {
 
         private readonly ApplicationDbContext _dbcontext;
-        public MenuService(ApplicationDbContext dbcontext)
+        private readonly IHttpContextAccessor _httpcontextAccessor;
+        public MenuService(ApplicationDbContext dbcontext, IHttpContextAccessor httpcontextAccessor)
         {
             _dbcontext = dbcontext;
+            _httpcontextAccessor = httpcontextAccessor;
         }
         public async Task<List<MenuDto>> GetMenuList(int roleId)
         {
@@ -68,11 +72,41 @@ namespace Itc.Hris.Infrastructure.Services
             }
         }
 
-        public async Task<(string Message, bool Status, List<MenuPermissionDto> data)> SaveMenuPermission(int roleId)
+        public async Task<(string Message, bool Status, List<MenuPermissionDto> data)> SaveMenuPermission(int roleId, List<int> SelectedMenus, int loginUserId, string btnTrigger)
         {
             try
             {
+                string smg = string.Empty;
+                if(SelectedMenus.Count != 0 && btnTrigger=="save")
+                {                   
 
+                    using var transaction = await _dbcontext.Database.BeginTransactionAsync();
+
+                    var existingPermissions = await _dbcontext.AppRoleMenuPermission
+                            .Where(x => x.RoleId == roleId)
+                            .ToListAsync();
+                    _dbcontext.AppRoleMenuPermission.RemoveRange(existingPermissions);
+                    await _dbcontext.SaveChangesAsync();
+
+                    foreach (var item in SelectedMenus)
+                    {
+                        var dataitem= new AppRoleMenuPermission
+                        {
+                            RoleId = roleId,
+                            MenuId = item,
+                            IsActive = 1,
+                            CreateBy = loginUserId,
+                            CreatedDate = DateTime.Now
+                        };
+
+                        _dbcontext.AppRoleMenuPermission.Add(dataitem);
+
+                    }
+                    await _dbcontext.SaveChangesAsync();
+                    smg = "Role Permission Successfully";
+
+                    await transaction.CommitAsync();
+                }
                 var parameters = new SqlParameter("@RoleId", roleId);                
 
                 var result = await _dbcontext.MenuPermissionView
@@ -111,8 +145,10 @@ namespace Itc.Hris.Infrastructure.Services
                  .OrderBy(x => x.ViewOrder)
                  .ToList();
 
+                string message = btnTrigger=="load" ? "Menu permissions retrieved successfully" : smg;
 
-                return ("Menu permissions retrieved successfully", true, permissionList);
+
+                return (message, true, permissionList);
 
             }
             catch (Exception ex)

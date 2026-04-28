@@ -11,6 +11,6 @@ namespace Itc.Hris.Application.Interfaces
     {
         Task<List<MenuDto>> GetMenuList(int roleId);
 
-        Task<(string Message, bool Status, List<MenuPermissionDto> data)> SaveMenuPermission(int roleId);
+        Task<(string Message, bool Status, List<MenuPermissionDto> data)> SaveMenuPermission(int roleId, List<int> SelectedMenus, int loginUserId, string btnTrigger);
     }
 }

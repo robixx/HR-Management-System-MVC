@@ -22,6 +22,13 @@
 <div class="row">
     <div class="col-12">
         <div class="card">
+            @if (TempData["Message"] != null)
+            {
+                <div class="alert alert-@TempData["Status"] alert-dismissible fade show" role="alert">
+                    @TempData["Message"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
             <div class="card-body">
                 <form asp-area="Admin" asp-controller="Security" asp-action="PagePermission" method="post">
                     <div class="row g-2 mb-3">
@@ -30,43 +37,26 @@
                             @Html.DropDownList("RoleId", ViewBag.RoleList as SelectList, "  Select Role  ", new { @class = "form-control select2" })
                         </div>
                         <div class="col-auto d-flex align-items-end">
-                            <button type="submit" class="btn btn-primary">
+                            <button type="submit" name="btnTrigger" value="load" class="btn btn-primary">
                                 <i class="fas fa-search me-1"></i> Load Page
                             </button>
                         </div>
                     </div>
-                </form>                 
-              
-            </div>
-        </div>
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-12">
-        <div class="card">
-            
-            <div class="card-body">              
-                <div class="text-end">
-                   
-                    <button type="submit" form="menuPermissionForm" class="btn btn-primary btn-sm">
-                        <i class="bi bi-save me-1"></i>Save Permissions
-                    </button>
-                </div>
-                <div class="menu-tree  mt-4">
-                        @if (Model == null || !Model.Any())
-                        {
-                            <div class="alert alert-warning">
-                                <i class="bi bi-exclamation-triangle me-2"></i>
-                                No menu permissions available.
-                                @if (!string.IsNullOrEmpty(ViewBag.Message))
-                                {
-                                    <br /><small>@ViewBag.Message</small>
-                                }
-                            </div>
-                        }
-                        else
-                        {
-                            foreach (var menu in Model)
+                    <!-- Permissions Section (Only show if model has data) -->
+                    @if (Model != null && Model.Any())
+                    {
+                        <hr />
+                        
+                        <!-- Save Button -->
+                        <div class="text-end mb-3">
+                            <button type="submit" name="btnTrigger" value="save" class="btn btn-primary btn-sm">
+                                <i class="fas fa-save me-2"></i> Save View Permissions
+                            </button>
+                        </div>
+
+                        <!-- Menu Tree -->
+                        <div class="menu-tree">
+                            @foreach (var menu in Model)
                             {
                                 <div class="menu-item mb-3">
                                     <!-- Main Menu -->
@@ -119,14 +109,22 @@
                                     }
                                 </div>
                             }
-                        }
-
-                    </div>
-
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-info text-center">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Select a role and click "Load Page" to view permissions.
+                        </div>
+                    }
+                </form>
+              
             </div>
         </div>
     </div>
 </div>
+
 
 
 
@@ -157,3 +155,21 @@
 
 }
 <script src="~/assets/libs/jquery/jquery.min.js"></script>
+
+
+<script>
+   
+    document.addEventListener("DOMContentLoaded", function() {
+   
+        const alertElement = document.querySelector('.alert');
+        
+        if (alertElement) {
+    
+            setTimeout(function() {
+            // Use Bootstrap's built-in alert 'close' method
+            const alert = new bootstrap.Alert(alertElement);
+            alert.close();
+            }, 2000);
+            }
+    });
+</script>

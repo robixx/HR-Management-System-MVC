@@ -37,6 +37,11 @@ namespace ITC.HRIS.WEB.Controllers
 
             if (status && user != null)
             {
+
+                HttpContext.Session.SetInt32("EmployeeId", Convert.ToInt32( user.EmployeeId));
+                HttpContext.Session.SetInt32("RoleId", user.RoleId);
+                HttpContext.Session.SetString("RoleName", user.RoleName ?? "Guest");
+
                 var claims = new List<Claim>
                 {
                     new Claim(ClaimTypes.Name, user.DisplayName ?? "User"),
