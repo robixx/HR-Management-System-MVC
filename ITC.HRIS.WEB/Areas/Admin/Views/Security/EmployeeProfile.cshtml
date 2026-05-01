@@ -1,0 +1,152 @@
+﻿@model List<Itc.Hris.Application.ModelView.EmployeeInformationDto>
+@{
+    ViewBag.Title = "Employee Profile";
+    ViewBag.pTitle = "Employee Profile Manage";
+    ViewBag.pageTitle = "HRIS";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    int i = 1;
+}
+
+
+@section styles {
+    <link href="@Url.Content("~/assets/libs/select2/css/select2.min.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/assets/libs/bootstrap-datepicker/css/bootstrap-datepicker.min.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/assets/libs/admin-resources/jquery.vectormap/jquery-jvectormap-1.2.2.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/assets/libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css")" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/assets/libs/toastr/build/toastr.min.css")">
+}
+
+
+<style>
+    .action-btns {
+        opacity: 0;
+        transition: 0.2s;
+    }
+
+    .role-row:hover .action-btns {
+        opacity: 1;
+    }
+
+    .avatar-circle {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #4e73df, #1cc88a);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+    }
+</style>
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="datatable" class="table table-hover nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                        <thead style="background:linear-gradient(180deg, rgb(80 47 47 / 15%), rgb(28 34 82 / 28%));">
+                            <tr>
+                                <th>Serial</th>
+                                <th>Employee Name</th>
+                                <th>Department</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Any())
+                            {
+                                foreach (var emp in Model)
+                                {
+                                    <tr>
+                                        <td>@i</td>
+                                        <td>
+                                            <div class="d-flex align-items-center gap-3">
+
+                                                <div class="avatar-circle">
+                                                    @emp.profileName?.Substring(0, 1).ToUpper()
+                                                </div>
+                                                       
+                                                <!-- Name + Designation -->
+                                                <div>
+                                                    <div class="fw-semibold">
+                                                        @emp.profileName
+                                                    </div>
+                                                    <small class="text-muted">
+                                                        @emp.designation
+                                                    </small>
+                                                    <small style="color:darkred;">
+                                                        ( @emp.employeeCode )
+                                                    </small>
+                                                </div>
+
+                                            </div>
+                                        </td>
+                                        <td>@emp.department</td>
+                                        <td>@emp.email</td>
+                                        <td>
+                                            @if (!string.IsNullOrEmpty(emp.RoleName))
+                                            {
+                                                <span class="badge bg-primary">
+                                                    @emp.RoleName
+                                                </span>
+                                            }
+                                        </td>
+                                        <td>
+                                            <span class="badge @(emp.Status == "Active" ? "bg-success" : "bg-danger")">
+                                                @emp.Status
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <a href="/Employee/Profile/@emp.employeeId"
+                                                   class="btn btn-sm btn-outline-primary" title="Profile">
+                                                <i class="ri-user-line"></i>
+                                            </a>
+                                        </td>
+                                            
+                                    </tr>
+                                    i++;
+                                }
+                            
+                            }
+                        
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+
+@section scripts {
+    <!-- apexcharts -->
+    <script src="@Url.Content("~/assets/libs/select2/js/select2.min.js")"></script>
+    <script src="@Url.Content("~/assets/libs/spectrum-colorpicker2/spectrum.min.js")"></script>
+    <script src="@Url.Content("~/assets/libs/bootstrap-datepicker/js/bootstrap-datepicker.min.js")"></script>
+    <script src="@Url.Content("~/assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js")"></script>
+    <script src="@Url.Content("~/assets/libs/admin-resources/jquery.vectormap/jquery-jvectormap-1.2.2.min.js")"></script>
+    <script src="@Url.Content("~/assets/libs/admin-resources/jquery.vectormap/maps/jquery-jvectormap-us-merc-en.js")"></script>
+    <script src="@Url.Content("~/assets/libs/datatables.net/js/jquery.dataTables.min.js")"></script>
+    <script src="@Url.Content("~/assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js")"></script>
+    <script src="@Url.Content("~/assets/libs/datatables.net-responsive/js/dataTables.responsive.min.js")"></script>
+    <script src="@Url.Content("~/assets/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js")"></script>
+    <script src="@Url.Content("~/assets/js/pages/datatables.init.js")"></script>
+    <script src="@Url.Content("~/assets/libs/toastr/build/toastr.min.js")"></script>
+
+    <!-- toastr init -->
+    <script src="@Url.Content("~/assets/js/pages/toastr.init.js")"></script>
+    <script src="@Url.Content("~/assets/libs/bootstrap-maxlength/bootstrap-maxlength.min.js")"></script>
+    <script src="@Url.Content("~/assets/js/pages/form-advanced.init.js")"></script>
+    <script src="@Url.Content("~/assets/js/app.js")"></script>
+
+
+}
+<script src="~/assets/libs/jquery/jquery.min.js"></script>

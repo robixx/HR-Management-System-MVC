@@ -12,11 +12,13 @@ namespace ITC.HRIS.WEB.Areas.Admin.Controllers
     {
         private readonly IDropdown _dropdown;
         private readonly IMenu _menu;
+        private readonly IUserInformation _userInformation;
 
-        public SecurityController(IDropdown dropdown, IMenu menu)
+        public SecurityController(IDropdown dropdown, IMenu menu, IUserInformation userInformation)
         {
             _dropdown = dropdown;
             _menu = menu;
+            _userInformation = userInformation;
         }
 
         [HttpGet]
@@ -37,6 +39,14 @@ namespace ITC.HRIS.WEB.Areas.Admin.Controllers
             TempData["Message"] = menulist.Message;
             TempData["Status"] = menulist.Status ? "success" : "danger";
             return View(menulist.data);
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> EmployeeProfile()
+        {
+            var empinfo = await _userInformation.GetEmployeesInFoAsync();
+            return View(empinfo.emp_list);
         }
     }
 }

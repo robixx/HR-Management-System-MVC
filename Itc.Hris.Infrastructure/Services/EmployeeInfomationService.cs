@@ -112,6 +112,8 @@ namespace Itc.Hris.Infrastructure.Services
             }
         }
 
+        
+
         public async Task<(string Message, bool Status, List<UserWiseRoleDto> user_list)> GetEmployeesInformationAsync()
         {
 
@@ -147,6 +149,46 @@ namespace Itc.Hris.Infrastructure.Services
             catch (Exception ex)
             {
                 return ($"Method-> {nameof(GetEmployeesInformationAsync)} and Error->{ex.Message}", false, new List<UserWiseRoleDto>());
+            }
+        }
+
+        public async Task<(string Message, bool Status, List<EmployeeInformationDto> emp_list)> GetEmployeesInFoAsync()
+        {
+            try
+            {
+                var employee = await (
+                     from e in _dbcontext.VwEmployeeDetails.AsNoTracking()
+                     where e.statusId == 17
+
+                     join rp in _dbcontext.AppRolePermission
+                         on e.employeeId equals rp.EmployeeId into rpGroup
+                     from rp in rpGroup.DefaultIfEmpty()
+                      
+
+                     join r in _dbcontext.AppRole
+                        on rp.RoleId equals r.RoleId into rGroup
+                     from r in rGroup.DefaultIfEmpty()
+
+                     select new EmployeeInformationDto
+                     {
+                         employeeId = e.employeeId,                         
+                         employeeCode = e.employeeCode ?? "",
+                         profileName = e.profileName ?? "",                         
+                         email = e.email ?? "",
+                         designation = e.designation ?? "",
+                         department = e.department ?? "",
+                         roleId = rp.RoleId ?? 0,
+                         RoleName = r.RoleName ?? "",
+                         Status = e.statusId == 17?"Active": "Inactive"
+                     }
+                 ).ToListAsync();
+
+
+                return ("Data retrieved successfully", true, employee);
+            }
+            catch (Exception ex)
+            {
+                return ($"Method-> {nameof(GetEmployeesInFoAsync)} and Error->{ex.Message}", false, new List<EmployeeInformationDto>());
             }
         }
     }
