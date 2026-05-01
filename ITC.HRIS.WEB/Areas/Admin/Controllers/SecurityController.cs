@@ -48,5 +48,14 @@ namespace ITC.HRIS.WEB.Areas.Admin.Controllers
             var empinfo = await _userInformation.GetEmployeesInFoAsync();
             return View(empinfo.emp_list);
         }
+
+
+        [HttpGet]
+        public async Task<IActionResult> EmployeeProfileView(long employeeId)
+        {
+            
+            return View();
+
+        }
     }
 }
