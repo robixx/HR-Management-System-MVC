@@ -15,6 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add DbContext (configure your connection string in appsettings.json)
 var conn = builder.Configuration.GetConnectionString("DefaultConnection") ?? "Server=DESKTOP-FH0NH88;Database=ihelp_db_live_TEST;Trusted_Connection=True;";
 builder.Services.AddDbContext<ApplicationDbContext>(opt => opt.UseSqlServer(conn));
+
 builder.Services.AddControllersWithViews();
 
 
@@ -28,7 +29,9 @@ builder.Services.AddCors(options =>
     });
 });
 builder.Services.AddDistributedMemoryCache();
+
 builder.Services.AddHttpContextAccessor();
+
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromHours(8); // session timeout
@@ -58,14 +61,10 @@ if (!app.Environment.IsDevelopment())
 app.UseSession();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
-
 app.UseRouting();
-
 app.UseCors("AllowAllOrigins");
 app.UseAuthentication();
 app.UseAuthorization();
-
 
 app.MapControllerRoute(
             name: "areas",

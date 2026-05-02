@@ -59,7 +59,7 @@ namespace ITC.HRIS.WEB.Controllers
                     new AuthenticationProperties
                     {
                         IsPersistent = true,
-                        ExpiresUtc = DateTimeOffset.UtcNow.AddHours(8) // Use UtcNow
+                        ExpiresUtc = DateTimeOffset.UtcNow.AddHours(8) 
                     });
 
                 return Ok(new

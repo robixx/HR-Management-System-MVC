@@ -13,11 +13,8 @@ namespace Itc.Hris.Model.Entities
     {
         [Key]
         public int Id { get; set; }
-
         public int? RoleId { get; set; }
-
         public long EmployeeId { get; set; }
-
         public int? IsActive { get; set; }
     }
 }

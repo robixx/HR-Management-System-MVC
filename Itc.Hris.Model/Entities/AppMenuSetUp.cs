@@ -10,8 +10,7 @@ namespace Itc.Hris.Model.Entities
 {
     [Table("app_MenuSetUp")]
     public class AppMenuSetUp
-    {
-       
+    {       
         public int MenuId { get; set; }
         public string? MenuName { get; set; }
         public string? Urls { get; set; }
