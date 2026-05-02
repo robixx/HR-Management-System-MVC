@@ -191,5 +191,62 @@ namespace Itc.Hris.Infrastructure.Services
                 return ($"Method-> {nameof(GetEmployeesInFoAsync)} and Error->{ex.Message}", false, new List<EmployeeInformationDto>());
             }
         }
+
+        public async Task<(string Message, bool Status, EmployeeDetailsDto data)> EmployeeDetailsAsync(long enployeeid)
+        {
+            try
+            {
+
+
+                var e = await _dbcontext.VwEmployeeDetails.FirstOrDefaultAsync(e => e.employeeId == enployeeid);
+                if (e == null)
+                {
+                    return ("Employee not found", false, new EmployeeDetailsDto());
+                }
+                var employee = new EmployeeDetailsDto
+                {
+                    employeeId = e.employeeId,
+                    profileId = e.profileId,
+                    lineManagerId = e.lineManagerId,
+                    designationId = e.designationId,
+                    employeeTypeId = e.employeeTypeId,
+                    employeeWorkType = e.employeeWorkType,
+                    unitId = e.unitId,
+                    employeeCode = e.employeeCode ?? "",
+                    profileName = e.profileName ?? "",
+                    fullname = e.fullname ?? "",
+                    email = e.email ?? "",
+                    contactNumber = e.contactNumber ?? "",
+                    corporateNumber = e.corporateNumber ?? "",
+                    fathersName = e.fathersName ?? "",
+                    mothersName = e.mothersName ?? "",
+                    permanentAddress = e.permanentAddress ?? "",
+                    presentAddress = e.presentAddress ?? "",
+                    dateOfBirth = e.dateOfBirth,
+                    dateOfJoin = e.dateOfJoin,
+                    dateOfRelease = e.dateOfRelease,
+                    dateOfResign = e.dateOfResign,
+                    photoUrl = e.photoUrl ?? "",
+                    lineManagerName = e.lineManagerName ?? "",
+                    sex = e.sex ?? "",
+                    designation = e.designation ?? "",
+                    employeeType = e.employeeType ?? "",
+                    workType = e.workType ?? "",
+                    status = e.status ?? "",
+                    moduleRoute = e.moduleRoute,
+                    department = e.department ?? "",
+                    shiftId = e.shiftId,
+                    shiftName = e.shiftName ?? "",
+                    bioUserId = e.bioUserId ?? 0,
+                    statusId = e.statusId
+
+                };
+                return ("Data retrieved successfully", true, employee );
+            }
+            catch (Exception ex)
+            {
+                return ($"Error : {ex.ToString()}", false, new EmployeeDetailsDto());
+            }
+        }
     }
 }
