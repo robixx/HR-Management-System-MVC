@@ -29,5 +29,13 @@ namespace ITC.HRIS.WEB.Areas.Admin.Controllers
             // Redirect to login page
             return RedirectToAction("Index", "Home", new { area = "" });
         }
+
+
+
+        [HttpGet]
+        public async Task<IActionResult> Calendarlist()
+        {
+            return View();
+        }
     }
 }

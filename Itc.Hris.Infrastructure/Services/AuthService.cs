@@ -3,11 +3,8 @@ using Itc.Hris.Application.ModelView;
 using Itc.Hris.Infrastructure.Data;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
+
 
 namespace Itc.Hris.Infrastructure.Services
 {
