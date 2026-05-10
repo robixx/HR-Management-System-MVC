@@ -20,6 +20,7 @@ namespace Itc.Hris.Infrastructure.Utility
             services.AddScoped<IDropdown, DropDownService>();
             services.AddScoped<IUserInformation, EmployeeInfomationService>();
             services.AddScoped<IMenu, MenuService>();
+            services.AddScoped<IVisit, VisitService>();
 
 
         }
