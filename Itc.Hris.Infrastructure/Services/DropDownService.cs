@@ -18,6 +18,8 @@ namespace Itc.Hris.Infrastructure.Services
             _dbcontext = dbcontext;
         }
 
+       
+
         public async Task<List<DropDownDto>> getRoleAsync()
         {
             try
@@ -58,6 +60,27 @@ namespace Itc.Hris.Infrastructure.Services
                 throw new Exception(ex.Message);
             }
             
+        }
+
+
+        public async Task<List<DropDownDto>> getDepartmentAsync()
+        {
+            try
+            {
+                var departmentList = await _dbcontext.VwEmployeeDetails
+                    .Where(d => d.statusId == 17)
+                    .Select(d => new DropDownDto
+                    {
+                        Id = d.unitId,
+                        Name = d.department
+                    }).ToListAsync();
+
+                return departmentList;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
     }
 }
