@@ -13,5 +13,12 @@ namespace ITC.HRIS.WEB.Areas.Admin.Controllers
         {
             return View();
         }
+
+
+        [HttpGet]
+        public IActionResult LeaveRecommendation()
+        {
+            return View();
+        }
     }
 }
