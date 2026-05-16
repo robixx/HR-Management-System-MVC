@@ -12,5 +12,6 @@ namespace Itc.Hris.Application.Interfaces
         Task<List<DropDownDto>> getUserAsync();
         Task<List<DropDownDto>> getRoleAsync();
         Task<List<DropDownDto>> getDepartmentAsync();
+        Task<List<DropdownDtos>> GetSessionDataAsync();
     }
 }

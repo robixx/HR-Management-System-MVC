@@ -19,6 +19,7 @@ namespace Itc.Hris.Infrastructure.Data
         public DbSet<LoginResponse> LoginResponse { get; set; }
         public DbSet<AppRoleMenuPermission> AppRoleMenuPermission { get; set; }
         public DbSet<MenuPermissionView> MenuPermissionView { get; set; }
+        public DbSet<AppHrisLeaveCalender> AppHrisLeaveCalender { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -28,6 +29,12 @@ namespace Itc.Hris.Infrastructure.Data
             {
                 entity.HasKey(e => e.RoleId);
                 entity.Property(e => e.RoleName).IsRequired().HasMaxLength(100);
+            });
+
+            modelBuilder.Entity<AppHrisLeaveCalender>(entity =>
+            {
+                entity.HasKey(e => e.CalenderId);
+                entity.Property(e => e.CalenderName).IsRequired().HasMaxLength(100);
             });
 
             modelBuilder.Entity<Permission>(entity =>

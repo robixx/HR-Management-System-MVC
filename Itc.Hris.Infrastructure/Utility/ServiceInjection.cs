@@ -21,6 +21,7 @@ namespace Itc.Hris.Infrastructure.Utility
             services.AddScoped<IUserInformation, EmployeeInfomationService>();
             services.AddScoped<IMenu, MenuService>();
             services.AddScoped<IVisit, VisitService>();
+            services.AddScoped<ILeaveApply, LeaveApplyService>();
 
 
         }

@@ -82,5 +82,24 @@ namespace Itc.Hris.Infrastructure.Services
                 throw new Exception(ex.Message);
             }
         }
+
+        public async Task<List<DropdownDtos>> GetSessionDataAsync()
+        {
+            try
+            {
+                var sessionData = await _dbcontext.AppHrisLeaveCalender.Select(x => new DropdownDtos
+                {
+                    Id = x.CalenderId,
+                    Name = x.CalenderName
+                }).ToListAsync();
+
+                return sessionData;
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }
