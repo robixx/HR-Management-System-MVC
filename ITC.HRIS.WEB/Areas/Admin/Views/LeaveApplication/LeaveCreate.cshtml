@@ -50,8 +50,105 @@
         <div class="card">
             <div class="card-header">Leave Apply</div>
             <div class="card-body">
-            </div>
-            
+                <form>
+
+                    <div class="row g-4">
+
+                        <!-- Leave Type -->
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">
+                                Leave Type
+                            </label>
+
+                            <select class="form-select">
+                                <option selected disabled>
+                                    Select Leave Type
+                                </option>
+
+                                <option>Casual Leave</option>
+                                <option>Sick Leave</option>
+                                <option>Annual Leave</option>
+                                <option>Emergency Leave</option>
+                            </select>
+                        </div>
+
+                        <!-- Responsible Person -->
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">
+                                Responsible Person
+                            </label>
+
+                            <input type="text"
+                                   class="form-control"
+                                   placeholder="Enter responsible person">
+                        </div>
+
+                        <!-- From Date -->
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">
+                                From Date & Time
+                            </label>
+
+                            <input type="datetime-local"
+                                   class="form-control">
+                        </div>
+
+                        <!-- To Date -->
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">
+                                To Date & Time
+                            </label>
+
+                            <input type="datetime-local"
+                                   class="form-control">
+                        </div>
+
+                        <!-- Reason -->
+                        <div class="col-12">
+                            <label class="form-label fw-semibold">
+                                Leave Reason
+                            </label>
+
+                            <textarea class="form-control"
+                                      rows="5"
+                                      placeholder="Write your reason here..."></textarea>
+                        </div>
+
+                        <!-- Attachment -->
+                        <div class="col-12">
+                            <label class="form-label fw-semibold">
+                                Attachment
+                            </label>
+
+                            <input type="file"
+                                   class="form-control"
+                                   multiple>
+
+                            <div class="form-text">
+                                You can upload multiple files (PDF, DOCX, JPG, PNG)
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Buttons -->
+                    <div class="d-flex justify-content-end gap-2 mt-4">
+
+                        <button type="reset"
+                                class="btn btn-light border px-4">
+                            Reset
+                        </button>
+
+                        <button type="submit"
+                                class="btn btn-primary px-4">
+                            Submit Application
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>            
         </div>
     </div>
 </div>
